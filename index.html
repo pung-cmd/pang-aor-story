@@ -195,12 +195,23 @@ body{font-family:'IBM Plex Sans Thai',sans-serif;font-weight:300;-webkit-font-sm
 .gallery .gsub{text-align:center;color:var(--taupe2);font-size:.86rem;letter-spacing:.1em;margin-bottom:20px}
 .grid{columns:2;column-gap:10px}
 .grid figure{break-inside:avoid;margin:0 0 10px;border-radius:12px;overflow:hidden;
-  background:rgba(239,230,214,.04);position:relative;cursor:zoom-in}
+  background:rgba(239,230,214,.04);position:relative;cursor:zoom-in;
+  translate:0 var(--py,0px)}
+.grid .ph{display:block}
 .grid img{display:block;width:100%;height:auto;transition:transform .7s var(--ease)}
-.grid figure:hover img{transform:scale(1.04)}
 .grid figure::after{content:'';position:absolute;inset:0;border-radius:12px;
   box-shadow:inset 0 0 0 1px rgba(239,230,214,.09);pointer-events:none}
-.scene.play .grid figure{animation:fadeUp .7s var(--ease) var(--d,0s) both}
+@keyframes tileIn{
+  0%{opacity:0;transform:translateY(18px) rotate(var(--r,0deg)) scale(.955);filter:blur(7px)}
+  55%{filter:blur(0)}
+  100%{opacity:1;transform:none;filter:blur(0)}
+}
+@keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-2.6px)}}
+.scene.play .grid .ph{animation:tileIn .9s var(--ease) var(--d,0s) both,
+  floaty 7s ease-in-out calc(var(--d,0s) + .9s) infinite}
+.grid figure:nth-child(odd) .ph{--r:-1.1deg}
+.grid figure:nth-child(even) .ph{--r:1.1deg}
+@media (hover:hover){ .grid figure:hover img{transform:scale(1.04)} }
 
 /* ---------- ดูรูปเต็มจอ ---------- */
 .lb{position:fixed;inset:0;z-index:60;background:rgba(8,7,7,.97);
@@ -208,8 +219,11 @@ body{font-family:'IBM Plex Sans Thai',sans-serif;font-weight:300;-webkit-font-sm
 .lb.open{opacity:1;visibility:visible;transition:opacity .3s var(--ease),visibility 0s}
 .lb .lbimg{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
   padding:calc(env(safe-area-inset-top) + 52px) 14px calc(env(safe-area-inset-bottom) + 40px)}
-.lb img{max-width:100%;max-height:100%;object-fit:contain;border-radius:6px;
-  -webkit-user-drag:none;user-select:none}
+.lb .lbimg::before{content:'';position:absolute;width:min(78vw,520px);aspect-ratio:1;border-radius:50%;
+  background:radial-gradient(circle,rgba(196,148,154,.14),transparent 68%);
+  filter:blur(12px);pointer-events:none;animation:breathe 6.5s ease-in-out infinite}
+.lb img{position:relative;max-width:100%;max-height:100%;object-fit:contain;border-radius:6px;
+  -webkit-user-drag:none;user-select:none;will-change:transform}
 .lb button{position:absolute;display:flex;align-items:center;justify-content:center;
   width:46px;height:46px;border-radius:50%;border:1px solid rgba(239,230,214,.2);
   background:rgba(20,18,17,.6);color:var(--cream);font:inherit;font-size:1.3rem;line-height:1;
@@ -408,13 +422,13 @@ body{font-family:'IBM Plex Sans Thai',sans-serif;font-weight:300;-webkit-font-sm
       <h2>รูปของปังกับอ้อ</h2>
       <p class="gsub">แตะที่รูปเพื่อดูเต็มจอ</p>
       <div class="grid">
-        <figure style="--d:.1s"><img src="images/9189.jpg" alt="ปังกับอ้อ" loading="lazy"></figure>
-        <figure style="--d:.2s"><img src="images/9190.jpg" alt="ปังกับอ้อ" loading="lazy"></figure>
-        <figure style="--d:.3s"><img src="images/9192.jpg" alt="ปังกับอ้อ" loading="lazy"></figure>
-        <figure style="--d:.4s"><img src="images/9193.jpg" alt="ปังกับอ้อ" loading="lazy"></figure>
-        <figure style="--d:.5s"><img src="images/9191.jpg" alt="ปังกับอ้อ" loading="lazy"></figure>
-        <figure style="--d:.6s"><img src="images/9194.jpg" alt="ปังกับอ้อ" loading="lazy"></figure>
-        <figure style="--d:.7s"><img src="images/9195.jpg" alt="ปังกับอ้อ" loading="lazy"></figure>
+        <figure style="--d:.1s"><div class="ph"><img src="images/9189.jpg" alt="ปังกับอ้อ" loading="lazy"></div></figure>
+        <figure style="--d:.2s"><div class="ph"><img src="images/9190.jpg" alt="ปังกับอ้อ" loading="lazy"></div></figure>
+        <figure style="--d:.3s"><div class="ph"><img src="images/9192.jpg" alt="ปังกับอ้อ" loading="lazy"></div></figure>
+        <figure style="--d:.4s"><div class="ph"><img src="images/9193.jpg" alt="ปังกับอ้อ" loading="lazy"></div></figure>
+        <figure style="--d:.5s"><div class="ph"><img src="images/9191.jpg" alt="ปังกับอ้อ" loading="lazy"></div></figure>
+        <figure style="--d:.6s"><div class="ph"><img src="images/9194.jpg" alt="ปังกับอ้อ" loading="lazy"></div></figure>
+        <figure style="--d:.7s"><div class="ph"><img src="images/9195.jpg" alt="ปังกับอ้อ" loading="lazy"></div></figure>
       </div>
     </div>
   </section>
@@ -460,6 +474,11 @@ function show(i){
 
   cur = i; shownAt = performance.now();
   updateUI();
+
+  if (next.classList.contains('s11')){
+    if (galleryEl) galleryEl.scrollTop = 0;
+    requestAnimationFrame(parallax);
+  }
 
   setTimeout(() => {
     if (prev) prev.classList.remove('leaving','play');
@@ -512,12 +531,37 @@ document.addEventListener('touchend', e => {
   if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) go(dx < 0 ? 1 : -1);
 }, {passive:true});
 
+/* ---------- ลูกเล่นหน้ารวมรูป ---------- */
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const galleryEl = document.querySelector('.gallery');
+const tiles = [...document.querySelectorAll('.grid figure')];
+let pRAF = 0;
+
+function parallax(){
+  if (reduceMotion || !galleryEl) return;
+  if (!scenes[cur] || !scenes[cur].classList.contains('s11')) return;
+  const gr = galleryEl.getBoundingClientRect();
+  const mid = gr.top + gr.height / 2;
+  tiles.forEach(t => {
+    const r = t.getBoundingClientRect();
+    const d = (r.top + r.height / 2) - mid;
+    const py = Math.max(-9, Math.min(9, -d * 0.032));
+    t.style.setProperty('--py', py.toFixed(2) + 'px');
+  });
+}
+function queueParallax(){
+  if (pRAF) return;
+  pRAF = requestAnimationFrame(() => { pRAF = 0; parallax(); });
+}
+if (galleryEl) galleryEl.addEventListener('scroll', queueParallax, {passive:true});
+window.addEventListener('resize', queueParallax);
+
 /* ---------- ดูรูปเต็มจอ ---------- */
 const photos = [...document.querySelectorAll('.grid figure img')];
 const lb = document.getElementById('lb');
 const lbImg = document.getElementById('lbImg');
 const lbNums = document.getElementById('lbNums');
-let lbIndex = -1, lbOpen = false;
+let lbIndex = -1, lbOpen = false, lbClosing = false;
 
 function renderLB(){
   const img = photos[lbIndex];
@@ -525,24 +569,57 @@ function renderLB(){
   lbImg.alt = img.alt;
   lbNums.textContent = `${lbIndex + 1} / ${photos.length}`;
 }
+function flipTo(thumb){
+  lbImg.getAnimations().forEach(a => a.cancel());
+  if (reduceMotion || !thumb) return;
+  const fr = lbImg.getBoundingClientRect();
+  if (!fr.width || !fr.height) return;
+  const s = Math.min(1.8, Math.max(.18, thumb.width / fr.width));
+  const dx = (thumb.left + thumb.width / 2) - (fr.left + fr.width / 2);
+  const dy = (thumb.top + thumb.height / 2) - (fr.top + fr.height / 2);
+  lbImg.animate([
+    {transform:`translate(${dx}px,${dy}px) scale(${s})`, opacity:.45, borderRadius:'12px'},
+    {transform:'none', opacity:1, borderRadius:'6px'}
+  ], {duration:460, easing:'cubic-bezier(.22,.61,.36,1)'});
+}
 function openLB(i){
-  if (i < 0 || i >= photos.length) return;
+  if (i < 0 || i >= photos.length || lbClosing) return;
+  const thumb = photos[i].getBoundingClientRect();
   lbIndex = i; lbOpen = true; renderLB();
   lb.classList.add('open');
   lb.setAttribute('aria-hidden','false');
+  flipTo(thumb);
 }
 function closeLB(){
-  lbOpen = false;
-  lb.classList.remove('open');
-  lb.setAttribute('aria-hidden','true');
+  if (!lbOpen || lbClosing) return;
+  const thumb = photos[lbIndex] ? photos[lbIndex].getBoundingClientRect() : null;
+  const done = () => {
+    lbOpen = false; lbClosing = false;
+    lb.classList.remove('open');
+    lb.setAttribute('aria-hidden','true');
+  };
+  if (reduceMotion || !thumb){ done(); return; }
+  const fr = lbImg.getBoundingClientRect();
+  if (!fr.width || !fr.height){ done(); return; }
+  lbClosing = true;
+  const s = Math.max(.18, thumb.width / fr.width);
+  const dx = (thumb.left + thumb.width / 2) - (fr.left + fr.width / 2);
+  const dy = (thumb.top + thumb.height / 2) - (fr.top + fr.height / 2);
+  const a = lbImg.animate([
+    {transform:'none', opacity:1, borderRadius:'6px'},
+    {transform:`translate(${dx}px,${dy}px) scale(${s})`, opacity:0, borderRadius:'12px'}
+  ], {duration:380, easing:'cubic-bezier(.4,0,.2,1)', fill:'forwards'});
+  a.onfinish = () => { a.cancel(); done(); };
 }
 function stepLB(d){
-  if (!lbOpen || !photos.length) return;
+  if (!lbOpen || lbClosing || !photos.length) return;
   lbIndex = (lbIndex + d + photos.length) % photos.length;
   renderLB();
+  lbImg.getAnimations().forEach(a => a.cancel());
+  if (!reduceMotion) lbImg.animate([{opacity:.35},{opacity:1}], {duration:320, easing:'ease'});
 }
 photos.forEach((img, i) => {
-  img.parentElement.addEventListener('click', e => { e.stopPropagation(); openLB(i); });
+  img.closest('figure').addEventListener('click', e => { e.stopPropagation(); openLB(i); });
 });
 document.getElementById('lbClose').addEventListener('click', e => { e.stopPropagation(); closeLB(); });
 document.getElementById('lbPrev').addEventListener('click', e => { e.stopPropagation(); stepLB(-1); });
