@@ -184,6 +184,42 @@ body{font-family:'IBM Plex Sans Thai',sans-serif;font-weight:300;-webkit-font-sm
 .count.off{opacity:0}
 .bar{position:fixed;top:0;left:0;height:2px;width:0;background:rgba(239,230,214,.22);z-index:10;transition:width .45s var(--ease)}
 
+/* ---------- หน้ารวมรูป ---------- */
+.s11{background:linear-gradient(180deg,#181513 0%,#24201c 100%)}
+.gallery{flex:1 1 auto;overflow-y:auto;-webkit-overflow-scrolling:touch;user-select:none;-webkit-user-select:none;
+  padding-bottom:28px;
+  -webkit-mask-image:linear-gradient(transparent,#000 3%,#000 96%,transparent);
+          mask-image:linear-gradient(transparent,#000 3%,#000 96%,transparent)}
+.gallery h2{font-family:'Noto Serif Thai',serif;font-weight:400;font-size:clamp(1.3rem,5.4vw,1.75rem);
+  text-align:center;line-height:1.6;margin-bottom:4px}
+.gallery .gsub{text-align:center;color:var(--taupe2);font-size:.86rem;letter-spacing:.1em;margin-bottom:20px}
+.grid{columns:2;column-gap:10px}
+.grid figure{break-inside:avoid;margin:0 0 10px;border-radius:12px;overflow:hidden;
+  background:rgba(239,230,214,.04);position:relative;cursor:zoom-in}
+.grid img{display:block;width:100%;height:auto;transition:transform .7s var(--ease)}
+.grid figure:hover img{transform:scale(1.04)}
+.grid figure::after{content:'';position:absolute;inset:0;border-radius:12px;
+  box-shadow:inset 0 0 0 1px rgba(239,230,214,.09);pointer-events:none}
+.scene.play .grid figure{animation:fadeUp .7s var(--ease) var(--d,0s) both}
+
+/* ---------- ดูรูปเต็มจอ ---------- */
+.lb{position:fixed;inset:0;z-index:60;background:rgba(8,7,7,.97);
+  opacity:0;visibility:hidden;transition:opacity .3s var(--ease),visibility 0s linear .3s}
+.lb.open{opacity:1;visibility:visible;transition:opacity .3s var(--ease),visibility 0s}
+.lb .lbimg{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  padding:calc(env(safe-area-inset-top) + 52px) 14px calc(env(safe-area-inset-bottom) + 40px)}
+.lb img{max-width:100%;max-height:100%;object-fit:contain;border-radius:6px;
+  -webkit-user-drag:none;user-select:none}
+.lb button{position:absolute;display:flex;align-items:center;justify-content:center;
+  width:46px;height:46px;border-radius:50%;border:1px solid rgba(239,230,214,.2);
+  background:rgba(20,18,17,.6);color:var(--cream);font:inherit;font-size:1.3rem;line-height:1;
+  cursor:pointer;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.lb .lbclose{top:calc(env(safe-area-inset-top) + 8px);right:12px}
+.lb .lbprev{left:10px;top:50%;transform:translateY(-50%)}
+.lb .lbnext{right:10px;top:50%;transform:translateY(-50%)}
+.lb .lbnums{position:absolute;left:50%;transform:translateX(-50%);
+  bottom:calc(env(safe-area-inset-bottom) + 12px);font-size:.78rem;letter-spacing:.2em;color:var(--taupe2)}
+
 @media (min-width:768px){ :root{--fig:min(34vh,260px)} .scene{padding-top:48px} }
 @media (prefers-reduced-motion:reduce){
   .scene *{animation-duration:1ms!important;animation-delay:0s!important;animation-iteration-count:1!important}
@@ -353,7 +389,7 @@ body{font-family:'IBM Plex Sans Thai',sans-serif;font-weight:300;-webkit-font-sm
   </section>
 
   <!-- 10 จดหมาย (อัปเดตข้อความใหม่แล้ว) -->
-  <section class="scene s10" data-dur="1200" data-nonext>
+  <section class="scene s10" data-dur="1200">
     <div class="letter a-in" style="--d:.1s">
       <p>อ้อครับ</p>
       <p>ถ้าย้อนกลับไปตอนแรก ๆ<br>ปังไม่คิดเลยว่าวันหนึ่งเราจะได้มาคุยกัน</p>
@@ -362,10 +398,35 @@ body{font-family:'IBM Plex Sans Thai',sans-serif;font-weight:300;-webkit-font-sm
       <p>สุขสันต์วันครบรอบสองเดือนนะครับอ้อ</p>
       <p>เค้ายังดีใจตลอด<br>ที่เค้ายังตื่นมาแล้วมีอ้อในทุก ๆ วัน</p>
       <p class="sign">จากปัง</p>
-      <button class="cta" data-go="restart">กดถัดไป</button>
+      <button class="cta" data-go="next">กดถัดไป</button>
+    </div>
+  </section>
+
+  <!-- 11 หน้ารวมรูป -->
+  <section class="scene s11" data-dur="1200" data-nonext>
+    <div class="gallery a-in">
+      <h2>รูปของปังกับอ้อ</h2>
+      <p class="gsub">แตะที่รูปเพื่อดูเต็มจอ</p>
+      <div class="grid">
+        <figure style="--d:.1s"><img src="images/9189.jpg" alt="ปังกับอ้อ" loading="lazy"></figure>
+        <figure style="--d:.2s"><img src="images/9190.jpg" alt="ปังกับอ้อ" loading="lazy"></figure>
+        <figure style="--d:.3s"><img src="images/9192.jpg" alt="ปังกับอ้อ" loading="lazy"></figure>
+        <figure style="--d:.4s"><img src="images/9193.jpg" alt="ปังกับอ้อ" loading="lazy"></figure>
+        <figure style="--d:.5s"><img src="images/9191.jpg" alt="ปังกับอ้อ" loading="lazy"></figure>
+        <figure style="--d:.6s"><img src="images/9194.jpg" alt="ปังกับอ้อ" loading="lazy"></figure>
+        <figure style="--d:.7s"><img src="images/9195.jpg" alt="ปังกับอ้อ" loading="lazy"></figure>
+      </div>
     </div>
   </section>
 </main>
+
+<div class="lb" id="lb" aria-hidden="true">
+  <div class="lbimg"><img id="lbImg" alt="รูปของปังกับอ้อ"></div>
+  <button class="lbclose" id="lbClose" aria-label="ปิด">×</button>
+  <button class="lbprev" id="lbPrev" aria-label="รูปก่อนหน้า">‹</button>
+  <button class="lbnext" id="lbNext" aria-label="รูปถัดไป">›</button>
+  <span class="lbnums" id="lbNums"></span>
+</div>
 
 <nav class="nav">
   <button id="prevBtn" aria-label="ย้อนกลับ">‹ ย้อนกลับ</button>
@@ -435,7 +496,7 @@ document.querySelectorAll('[data-go]').forEach(b => b.addEventListener('click', 
 }));
 
 document.getElementById('app').addEventListener('click', e => {
-  if (busy || e.target.closest('button,.letter')) return;
+  if (lbOpen || busy || e.target.closest('button,.letter,.grid')) return;
   const s = scenes[cur];
   if (performance.now() - shownAt < (+s.dataset.dur || 0)){
     s.classList.add('skip'); shownAt = 0; return;
@@ -446,11 +507,64 @@ document.getElementById('app').addEventListener('click', e => {
 let tx = 0, ty = 0;
 document.addEventListener('touchstart', e => { tx = e.touches[0].clientX; ty = e.touches[0].clientY; }, {passive:true});
 document.addEventListener('touchend', e => {
+  if (lbOpen) return;
   const dx = e.changedTouches[0].clientX - tx, dy = e.changedTouches[0].clientY - ty;
   if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) go(dx < 0 ? 1 : -1);
 }, {passive:true});
 
+/* ---------- ดูรูปเต็มจอ ---------- */
+const photos = [...document.querySelectorAll('.grid figure img')];
+const lb = document.getElementById('lb');
+const lbImg = document.getElementById('lbImg');
+const lbNums = document.getElementById('lbNums');
+let lbIndex = -1, lbOpen = false;
+
+function renderLB(){
+  const img = photos[lbIndex];
+  lbImg.src = img.currentSrc || img.src;
+  lbImg.alt = img.alt;
+  lbNums.textContent = `${lbIndex + 1} / ${photos.length}`;
+}
+function openLB(i){
+  if (i < 0 || i >= photos.length) return;
+  lbIndex = i; lbOpen = true; renderLB();
+  lb.classList.add('open');
+  lb.setAttribute('aria-hidden','false');
+}
+function closeLB(){
+  lbOpen = false;
+  lb.classList.remove('open');
+  lb.setAttribute('aria-hidden','true');
+}
+function stepLB(d){
+  if (!lbOpen || !photos.length) return;
+  lbIndex = (lbIndex + d + photos.length) % photos.length;
+  renderLB();
+}
+photos.forEach((img, i) => {
+  img.parentElement.addEventListener('click', e => { e.stopPropagation(); openLB(i); });
+});
+document.getElementById('lbClose').addEventListener('click', e => { e.stopPropagation(); closeLB(); });
+document.getElementById('lbPrev').addEventListener('click', e => { e.stopPropagation(); stepLB(-1); });
+document.getElementById('lbNext').addEventListener('click', e => { e.stopPropagation(); stepLB(1); });
+lb.addEventListener('click', e => {
+  if (e.target === lb || e.target.classList.contains('lbimg')) closeLB();
+});
+
+let ltx = 0, lty = 0;
+lb.addEventListener('touchstart', e => { ltx = e.touches[0].clientX; lty = e.touches[0].clientY; }, {passive:true});
+lb.addEventListener('touchend', e => {
+  const dx = e.changedTouches[0].clientX - ltx, dy = e.changedTouches[0].clientY - lty;
+  if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.2) stepLB(dx < 0 ? 1 : -1);
+}, {passive:true});
+
 document.addEventListener('keydown', e => {
+  if (lbOpen){
+    if (e.key === 'Escape') closeLB();
+    if (e.key === 'ArrowRight') stepLB(1);
+    if (e.key === 'ArrowLeft') stepLB(-1);
+    return;
+  }
   if (e.key === 'ArrowRight') go(1);
   if (e.key === 'ArrowLeft') go(-1);
 });
