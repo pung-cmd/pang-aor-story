@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#121110">
+<title>สวนดอกไม้ของปังกับอ้อ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500&family=Noto+Serif+Thai:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#121110; --taupe:#5e554e; --taupe2:#958a7f;
+  --cream:#efe6d6; --pang:#f4eee3; --aor:#c4949a;
+  --ease:cubic-bezier(.22,.61,.36,1); --fade:400ms;
+  --fig:min(30vh,230px);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:var(--ink);color:var(--cream);overflow:hidden;-webkit-tap-highlight-color:transparent}
+body{font-family:'IBM Plex Sans Thai',sans-serif;font-weight:300;-webkit-font-smoothing:antialiased}
+#app{position:fixed;inset:0;user-select:none;-webkit-user-select:none}
+
+/* ---------- ฉาก ---------- */
+.scene{
+  position:absolute;inset:0;display:flex;flex-direction:column;
+  padding:calc(env(safe-area-inset-top) + 28px) 24px calc(env(safe-area-inset-bottom) + 86px);
+  opacity:0;visibility:hidden;z-index:0;background:var(--ink);
+  transition:opacity var(--fade) var(--ease),visibility 0s linear var(--fade);
+}
+.scene.active{opacity:1;visibility:visible;z-index:2;transition:opacity var(--fade) var(--ease),visibility 0s}
+.scene.leaving{opacity:1;visibility:visible;z-index:1;transition:none}
+.scene>*{width:100%;max-width:620px;margin-inline:auto}
+
+.s1{background:radial-gradient(ellipse at 50% 72%,#2a2420 0%,#141210 68%)}
+.s2{background:linear-gradient(180deg,#1a1816 0%,#29241f 100%)}
+.s3{background:linear-gradient(180deg,#181614 0%,#24201c 100%)}
+.s4{background:linear-gradient(180deg,#151312 0%,#1f1c1a 100%)}
+.s5{background:linear-gradient(180deg,#1b1917 0%,#221f1c 100%)}
+.s6{background:radial-gradient(ellipse at 50% 60%,#121010 0%,#080707 70%)}
+.s7{background:radial-gradient(ellipse at 50% 70%,#141210 0%,#0b0a09 70%)}
+.s8{background:linear-gradient(180deg,#1c1a18 0%,#24201d 100%)}
+.s9{background:radial-gradient(ellipse at 50% 62%,#3a302a 0%,#1a1614 62%,#141211 100%)}
+.s10{background:linear-gradient(180deg,#141211 0%,#1b1816 100%)}
+
+/* ---------- เงาตัวละคร ---------- */
+.figs{position:relative;flex:1 1 auto;min-height:36%}
+.figs::after{content:'';position:absolute;left:-10%;right:-10%;bottom:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(239,230,214,.12),transparent)}
+.who{position:absolute;bottom:1px;left:var(--x,50%);height:var(--fig);transform:translateX(-50%)}
+.who svg{display:block;height:100%;width:auto;aspect-ratio:60/160;overflow:visible;opacity:var(--o,1);transform-origin:50% 100%}
+.pang svg{fill:var(--pang);filter:drop-shadow(0 0 14px rgba(244,238,227,.22))}
+.aor svg{fill:var(--aor);filter:drop-shadow(0 0 14px rgba(196,148,154,.25))}
+
+@keyframes idle{0%,100%{transform:scaleY(1) translateY(0)}50%{transform:scaleY(1.012) translateY(-.6%)}}
+@keyframes step{0%,100%{transform:translateY(0)}50%{transform:translateY(-2.2%)}}
+@keyframes peek{0%,30%,100%{transform:rotate(0)}45%,70%{transform:rotate(5deg)}}
+@keyframes sob{0%,40%,100%{transform:translateY(0)}8%,24%{transform:translateY(-1.2%)}16%,32%{transform:translateY(0)}}
+@keyframes leanR{to{transform:rotate(3deg)}}
+@keyframes leanL{to{transform:rotate(-3deg)}}
+
+.scene.active .who svg{animation:idle 4.2s ease-in-out infinite}
+.scene.active .aor svg{animation-duration:4.8s;animation-delay:-1.6s}
+.scene.active .walk svg{animation:step .45s ease-in-out var(--d,0s) 4, idle 4.2s ease-in-out calc(var(--d,0s) + 1.9s) infinite}
+.scene.active .dreamStep svg{animation:step .45s ease-in-out 1.2s 5, idle 4.8s ease-in-out 3.6s infinite}
+.scene.active .peek svg{animation:peek 5s ease-in-out 1.4s infinite}
+.scene.active .sob svg{animation:sob 2.6s ease-in-out .6s infinite}
+.scene.active .meetP svg{animation:step .45s ease-in-out .3s 5, leanR 1.2s var(--ease) 2.8s forwards}
+.scene.active .meetA svg{animation:step .45s ease-in-out .3s 5, leanL 1.2s var(--ease) 2.8s forwards}
+
+/* ---------- ปังหยิบโทรศัพท์ (หน้า 6) ---------- */
+.limb{fill:none;stroke:var(--pang);stroke-width:5.5;stroke-linecap:round}
+.armU{transform-box:view-box;transform-origin:44px 42px}
+.armF{transform-box:view-box;transform-origin:48px 64px}
+.screen{opacity:.25}
+@keyframes armU{from{transform:rotate(0)}to{transform:rotate(-25deg)}}
+@keyframes armF{from{transform:rotate(0)}to{transform:rotate(150deg)}}
+@keyframes screenOn{from{opacity:.25}to{opacity:1}}
+
+/* ---------- bubble คำพูดบนหัวอ้อ ---------- */
+.bubble{position:absolute;bottom:calc(100% + 16px);left:50%;transform:translateX(-50%);
+  white-space:nowrap;text-align:center;padding:10px 16px;border-radius:16px;
+  background:rgba(22,18,18,.9);border:1px solid rgba(196,148,154,.5);color:var(--aor);
+  font-family:'Noto Serif Thai',serif;font-size:clamp(.95rem,3.9vw,1.1rem);line-height:1.6;
+  box-shadow:0 0 18px rgba(196,148,154,.15)}
+.bubble::after{content:'';position:absolute;left:50%;bottom:-6px;width:10px;height:10px;
+  background:rgba(22,18,18,.95);border-right:1px solid rgba(196,148,154,.5);border-bottom:1px solid rgba(196,148,154,.5);
+  transform:translateX(-50%) rotate(45deg)}
+@keyframes pop{from{opacity:0;translate:0 8px}to{opacity:1;translate:0 0}}
+
+/* ---------- แสงเล็ก ๆ ---------- */
+.glow{position:absolute;left:var(--x,50%);bottom:var(--y,40%);width:6px;height:6px;transform:translate(-50%,50%)}
+.glow::before{content:'';position:absolute;inset:calc(var(--g,16px) * -1);border-radius:50%;
+  background:radial-gradient(circle,rgba(255,242,220,.95) 0,rgba(255,232,200,.35) 22%,transparent 70%);
+  animation:breathe 4.5s ease-in-out infinite}
+.glow.sm{--g:7px}
+@keyframes breathe{50%{transform:scale(1.35);opacity:.65}}
+
+.mote{position:absolute;left:var(--x);bottom:var(--y);width:3px;height:3px;border-radius:50%;
+  background:rgba(255,240,215,.85);box-shadow:0 0 8px rgba(255,235,205,.6);opacity:0;pointer-events:none}
+.scene.active .mote{animation:float var(--t,7s) ease-in-out var(--d,0s) infinite}
+@keyframes float{0%{opacity:0;transform:translate(0,0)}30%{opacity:.8}100%{opacity:0;transform:translate(8px,-70px)}}
+
+/* ---------- ข้อความ ---------- */
+.text{flex:0 0 auto;text-align:center;padding-top:30px}
+.center{flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center}
+.lead{font-family:'Noto Serif Thai',serif;font-weight:400;font-size:clamp(1.12rem,4.6vw,1.55rem);line-height:1.9}
+.sub{margin-top:18px;font-size:clamp(.94rem,3.7vw,1.06rem);line-height:1.95;color:var(--taupe2)}
+.key{font-family:'Noto Serif Thai',serif;font-size:clamp(1.3rem,5.6vw,1.9rem);line-height:1.7;margin-top:24px}
+.caption{flex:0 0 auto;text-align:center;padding-top:20px;font-family:'Noto Serif Thai',serif;font-weight:400;
+  font-size:clamp(1.35rem,6vw,2rem);line-height:1.6}
+.lines p{font-family:'Noto Serif Thai',serif;font-size:clamp(1.05rem,4.4vw,1.4rem);line-height:1.8;margin:10px 0}
+.lines .muted{color:var(--taupe2);font-size:.95em;letter-spacing:.2em;margin:22px 0}
+.bigdate{font-family:'Noto Serif Thai',serif;font-size:clamp(2rem,9vw,3rem);letter-spacing:.04em;margin:18px 0 4px}
+
+.date{font-size:.82rem;letter-spacing:.14em;color:var(--taupe2);margin-bottom:30px;text-align:center}
+.chat{width:100%;max-width:320px;display:flex;flex-direction:column;gap:14px;text-align:left}
+.msg{font-size:clamp(1rem,4.2vw,1.12rem);line-height:1.6}
+.msg b{font-weight:500;margin-right:.45em}
+.msg.p b{color:var(--pang)}
+.msg.a{align-self:flex-end}
+.msg.a b{color:var(--aor)}
+
+.letter{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;user-select:text;-webkit-user-select:text;
+  padding:24px 6px 32px;font-family:'Noto Serif Thai',serif;font-size:clamp(1rem,4.1vw,1.14rem);line-height:2.05;
+  -webkit-mask-image:linear-gradient(transparent,#000 5%,#000 92%,transparent);
+          mask-image:linear-gradient(transparent,#000 5%,#000 92%,transparent)}
+.letter p{margin-bottom:1.35em}
+.letter .sign{text-align:right;color:var(--taupe2);margin-top:2em}
+.letter .cta{display:block;margin:36px auto 0;font-family:'IBM Plex Sans Thai',sans-serif}
+
+.cta{margin-top:38px;background:transparent;border:1px solid rgba(239,230,214,.32);color:var(--cream);
+  padding:14px 30px;border-radius:999px;font:inherit;font-size:1rem;letter-spacing:.03em;cursor:pointer;
+  transition:background .3s,border-color .3s}
+.cta:hover,.cta:focus-visible{background:rgba(239,230,214,.06);border-color:rgba(239,230,214,.65);outline:none}
+
+/* ---------- แอนิเมชันเข้าฉาก ---------- */
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes dream{0%{opacity:0}15%{opacity:1}85%{opacity:1}100%{opacity:0}}
+@keyframes dreamWalk{from{left:92%}to{left:64%}}
+@keyframes lightOn{from{opacity:0;transform:translate(-50%,50%) scale(.2)}to{opacity:1;transform:translate(-50%,50%) scale(1)}}
+@keyframes walkL{from{opacity:0;translate:-40px 0}to{opacity:1;translate:0 0}}
+@keyframes away{0%{opacity:0;translate:0 0}25%{opacity:1}100%{opacity:.6;translate:26px 0}}
+@keyframes closeP{from{left:14%}to{left:43%}}
+@keyframes closeA{from{left:86%}to{left:57%}}
+
+.scene.play .a-up{animation:fadeUp .8s var(--ease) var(--d,0s) both}
+.scene.play .a-in{animation:fadeIn 1s ease var(--d,0s) both}
+.scene.play .a-dream{animation:dreamWalk 2.4s ease-out 1.2s both, dream 8.5s ease 1.2s both}
+.scene.play .a-pop{animation:pop .7s var(--ease) var(--d,0s) both}
+.scene.play .a-light{animation:lightOn 1.2s var(--ease) var(--d,0s) both}
+.scene.play .a-walkL{animation:walkL 1.9s ease-out var(--d,0s) both}
+.scene.play .a-away{animation:away 5s ease-out var(--d,0s) both}
+.scene.play .a-closeP{animation:closeP 2.3s var(--ease) var(--d,0s) both}
+.scene.play .a-closeA{animation:closeA 2.3s var(--ease) var(--d,0s) both}
+.scene.play .a-armU{animation:armU 1.2s var(--ease) var(--d,0s) both}
+.scene.play .a-armF{animation:armF 1.2s var(--ease) var(--d,0s) both}
+.scene.play .a-screen{animation:screenOn .8s ease var(--d,0s) both}
+.s6 .a-dream{opacity:0}
+
+.scene.skip .a-up,.scene.skip .a-in,.scene.skip .a-dream,.scene.skip .a-pop,.scene.skip .a-light,
+.scene.skip .a-walkL,.scene.skip .a-away,.scene.skip .a-closeP,.scene.skip .a-closeA,
+.scene.skip .a-armU,.scene.skip .a-armF,.scene.skip .a-screen{
+  animation-delay:0s!important;animation-duration:1ms!important}
+
+/* ---------- ปุ่มนำทาง ---------- */
+.nav{position:fixed;left:0;right:0;bottom:0;max-width:680px;margin:auto;z-index:10;
+  display:flex;justify-content:space-between;align-items:center;pointer-events:none;
+  padding:0 14px calc(env(safe-area-inset-bottom) + 16px)}
+.nav button{pointer-events:auto;background:none;border:none;color:var(--taupe2);font:inherit;font-size:.95rem;
+  padding:12px 16px;min-width:44px;min-height:44px;cursor:pointer;transition:opacity .3s,color .3s}
+.nav button:hover{color:var(--cream)}
+.nav .off{opacity:0;pointer-events:none}
+.count{font-size:.72rem;letter-spacing:.24em;color:var(--taupe);transition:opacity .3s}
+.count.off{opacity:0}
+.bar{position:fixed;top:0;left:0;height:2px;width:0;background:rgba(239,230,214,.22);z-index:10;transition:width .45s var(--ease)}
+
+@media (min-width:768px){ :root{--fig:min(34vh,260px)} .scene{padding-top:48px} }
+@media (prefers-reduced-motion:reduce){
+  .scene *{animation-duration:1ms!important;animation-delay:0s!important;animation-iteration-count:1!important}
+}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="pang" viewBox="0 0 60 160">
+      <circle cx="30" cy="17" r="11"/>
+      <rect x="26" y="25" width="8" height="8"/>
+      <path d="M30 31c-7 0-14 3-16 8l-5 44c0 3 4 4 5 1l4-34 1 36-1 70c0 3 7 3 7 0l3-62h4l3 62c0 3 7 3 7 0l-1-70 1-36 4 34c1 3 5 2 5-1l-5-44c-2-5-9-8-16-8z"/>
+    </symbol>
+    <symbol id="aor" viewBox="0 0 60 160">
+      <path d="M30 4c-10 0-15 7-14 15l-3 28c5 5 29 5 34 0l-3-28c1-8-4-15-14-15z"/>
+      <circle cx="30" cy="17" r="10"/>
+      <rect x="27" y="25" width="6" height="8"/>
+      <path d="M30 31c-6 0-11 2-13 6l-5 40c0 3 4 3 5 1l3-28 2 22-9 48c8 4 26 4 34 0l-9-48 2-22 3 28c1 2 5 2 5-1l-5-40c-2-4-7-6-13-6z"/>
+      <path d="M23 120h5l-1 38h-4zM32 120h5v38h-4z"/>
+    </symbol>
+  </defs>
+</svg>
+
+<div class="bar" id="bar"></div>
+
+<main id="app">
+
+  <!-- 1 หน้าเริ่มต้น -->
+  <section class="scene s1" data-dur="2600" data-nonext>
+    <div class="figs">
+      <div class="who pang a-in" style="--x:20%;--d:.15s"><svg><use href="#pang"/></svg></div>
+      <span class="glow a-in" style="--x:50%;--y:42%;--d:.7s"></span>
+      <span class="mote" style="--x:42%;--y:30%;--d:1s;--t:7s"></span>
+      <span class="mote" style="--x:58%;--y:22%;--d:3.5s;--t:8s"></span>
+      <span class="mote" style="--x:50%;--y:55%;--d:5.5s;--t:6.5s"></span>
+      <div class="who aor a-in" style="--x:80%;--o:.85;--d:.4s"><svg><use href="#aor"/></svg></div>
+    </div>
+    <div class="text">
+      <p class="lead a-up" style="--d:.9s">การเจอกันของปังกับอ้อ</p>
+      <button class="cta a-up" style="--d:1.7s" data-go="next">เริ่มเรื่องราวของเรา</button>
+    </div>
+  </section>
+
+  <!-- 2 เห็นอ้อครั้งแรก -->
+  <section class="scene s2" data-dur="2600" data-tap>
+    <div class="figs">
+      <div class="who pang walk a-walkL" style="--x:15%;--o:.8;--d:.1s"><svg><use href="#pang"/></svg></div>
+      <div class="who aor a-in" style="--x:58%;--d:.4s"><svg><use href="#aor"/></svg></div>
+      <span class="glow sm a-in" style="--x:36%;--y:70%;--d:1.1s"></span>
+    </div>
+    <div class="text">
+      <p class="lead a-up" style="--d:.9s">ตอนปังเข้าเทคนิคใหม่ ๆ<br>ปังเห็นอ้อครั้งแรก<br>แล้วปังก็ชอบอ้อตั้งแต่ตอนนั้นเลย</p>
+    </div>
+  </section>
+
+  <!-- 3 แอบมองอ้อทุกวัน -->
+  <section class="scene s3" data-dur="3300" data-tap>
+    <div class="figs">
+      <div class="who pang peek a-in" style="--x:12%;--d:.15s"><svg><use href="#pang"/></svg></div>
+      <div class="who aor a-in" style="--x:86%;--d:.4s"><svg><use href="#aor"/></svg></div>
+    </div>
+    <div class="text">
+      <p class="lead a-up" style="--d:.9s">หลังจากวันนั้น<br>ปังก็ชอบแอบมองอ้อทุกวัน</p>
+      <p class="sub a-up" style="--d:2.1s">ถึงอ้ออาจจะไม่รู้<br>แต่สำหรับปัง แค่ได้เห็นอ้อในแต่ละวันก็มีความสุขแล้ว</p>
+    </div>
+  </section>
+
+  <!-- 4 ไม่กล้าจีบ -->
+  <section class="scene s4" data-dur="3300" data-tap>
+    <div class="figs">
+      <div class="who pang a-in" style="--x:34%;--d:.15s"><svg><use href="#pang"/></svg></div>
+      <div class="who aor a-away" style="--x:82%;--d:.4s"><svg><use href="#aor"/></svg></div>
+    </div>
+    <div class="text">
+      <p class="lead a-up" style="--d:.9s">ปังชอบอ้อมากนะ<br>แต่ปังไม่กล้าจีบอ้อเลย</p>
+      <p class="sub a-up" style="--d:2.1s">เลยได้แต่เก็บความรู้สึกนั้นไว้<br>แล้วปล่อยให้เวลาผ่านไปหลายเดือน</p>
+    </div>
+  </section>
+
+  <!-- 5 ตามหาไอจี -->
+  <section class="scene s5" data-dur="5200" data-tap>
+    <div class="center lines">
+      <p class="a-up" style="--d:.3s">ปังให้เพื่อนไปหาไอจีอ้อมาให้</p>
+      <p class="a-up" style="--d:1.1s">ปังฟอลอ้อไป</p>
+      <p class="a-up" style="--d:1.9s">อ้อยังไม่รับ</p>
+      <p class="a-up" style="--d:2.7s">ปังเลยอันฟอล</p>
+      <p class="muted a-in" style="--d:3.5s">เวลาผ่านไป</p>
+      <p class="a-up" style="--d:4.3s">แล้วปังก็ฟอลอ้ออีกครั้ง</p>
+    </div>
+  </section>
+
+  <!-- 6 ความฝัน -->
+  <section class="scene s6" data-dur="9800" data-tap>
+    <div class="figs">
+      <div class="who pang a-in" style="--x:26%;--d:.15s"><svg><use href="#pang"/></svg></div>
+      <div class="who aor dreamStep a-dream" style="--x:64%">
+        <div class="bubble a-pop" style="--d:4s">เรารู้แล้วนะ<br>ว่าปังชอบเรา</div>
+        <svg><use href="#aor"/></svg>
+      </div>
+      <span class="mote" style="--x:58%;--y:20%;--d:1.6s;--t:6s"></span>
+      <span class="mote" style="--x:72%;--y:35%;--d:2.6s;--t:7s"></span>
+      <span class="mote" style="--x:66%;--y:55%;--d:4s;--t:6.5s"></span>
+      <span class="mote" style="--x:30%;--y:45%;--d:5s;--t:8s"></span>
+    </div>
+    <div class="text">
+      <p class="lead a-up" style="--d:.4s">แล้วคืนหนึ่ง<br>ปังฝันว่าอ้อเดินมาบอกว่า...</p>
+    </div>
+  </section>
+
+  <!-- 7 อ้อฟอลกลับ -->
+  <section class="scene s7" data-dur="4400" data-tap>
+    <div class="figs">
+      <div class="who pang sob a-in" style="--x:50%;--d:.15s">
+        <svg viewBox="0 0 60 160">
+          <circle cx="30" cy="17" r="11"/>
+          <rect x="26" y="25" width="8" height="8"/>
+          <path d="M30 31c-7 0-14 3-16 8l-5 44c0 3 4 4 5 1l4-34 1 36-1 70c0 3 7 3 7 0l3-62h4l3 62c0 3 7 3 7 0l-1-70 1-36 4-11c-2-5-9-8-16-8z"/>
+          <g class="armU a-armU" style="--d:1.3s">
+            <line class="limb" x1="44" y1="42" x2="48" y2="64"/>
+            <g class="armF a-armF" style="--d:1.3s">
+              <line class="limb" x1="48" y1="64" x2="49" y2="83"/>
+              <rect x="45.5" y="80" width="7" height="11" rx="1.5" fill="#2b2622"/>
+              <rect class="screen a-screen" x="46.6" y="81.2" width="4.8" height="8.6" rx=".8" fill="#ffe9c4" style="--d:2.4s"/>
+            </g>
+          </g>
+        </svg>
+        <span class="glow a-light" style="--x:62%;--y:68%;--g:18px;--d:2.4s"></span>
+      </div>
+    </div>
+    <div class="text">
+      <p class="lead a-up" style="--d:.4s">ปังตื่นขึ้นมาร้องไห้<br>แล้วเปิดโทรศัพท์เข้าไอจี</p>
+      <p class="key a-in" style="--d:3.2s">อ้อฟอลปังกลับแล้ว</p>
+    </div>
+  </section>
+
+  <!-- 8 ข้อความแรก -->
+  <section class="scene s8" data-dur="5300" data-tap>
+    <div class="center">
+      <p class="date a-in" style="--d:.2s">5 กันยายน 2026 · 14:48 น.</p>
+      <div class="chat">
+        <p class="msg p a-up" style="--d:.8s"><b>ปัง:</b>หวัดดีครับบ</p>
+        <p class="msg a a-up" style="--d:1.55s"><b>อ้อ:</b>ครับ?</p>
+        <p class="msg p a-up" style="--d:2.3s"><b>ปัง:</b>คุยด้วยได้ไหมครับ</p>
+        <p class="msg a a-up" style="--d:3.05s"><b>อ้อ:</b>อ่าครับ</p>
+        <p class="msg a a-up" style="--d:3.65s"><b>อ้อ:</b>คุยได้ครับ</p>
+      </div>
+    </div>
+    <p class="caption a-up" style="--d:4.4s">นี่คือข้อความแรกที่เราคุยกัน</p>
+  </section>
+
+  <!-- 9 วันที่ตกลงคบกัน -->
+  <section class="scene s9" data-dur="4000" data-tap>
+    <div class="figs">
+      <div class="who pang meetP a-closeP" style="--x:43%;--d:.3s"><svg><use href="#pang"/></svg></div>
+      <div class="who aor meetA a-closeA" style="--x:57%;--d:.3s"><svg><use href="#aor"/></svg></div>
+      <span class="glow a-in" style="--x:50%;--y:88%;--d:2.3s"></span>
+      <span class="mote" style="--x:48%;--y:80%;--d:2.8s;--t:6s"></span>
+      <span class="mote" style="--x:53%;--y:70%;--d:4.5s;--t:7s"></span>
+    </div>
+    <div class="text">
+      <p class="lead a-up" style="--d:.7s">จากข้อความแรกของเรา<br>กลายเป็นวันที่เราได้ตกลงคบกัน</p>
+      <p class="bigdate a-up" style="--d:2s">9 กันยายน 2026</p>
+      <p class="sub a-up" style="--d:2.6s">วันที่ปังกับอ้อตกลงคบกัน</p>
+    </div>
+  </section>
+
+  <!-- 10 จดหมาย (อัปเดตข้อความใหม่แล้ว) -->
+  <section class="scene s10" data-dur="1200" data-nonext>
+    <div class="letter a-in" style="--d:.1s">
+      <p>อ้อครับ</p>
+      <p>ถ้าย้อนกลับไปตอนแรก ๆ<br>ปังไม่คิดเลยว่าวันหนึ่งเราจะได้มาคุยกัน</p>
+      <p>จากวันที่ปังได้แต่แอบมองอ้ออยู่ไกล ๆ<br>จากวันที่ยังไม่กล้าจีบ<br>จนถึงวันที่ปังได้ทักอ้อไปว่า<br>‘หวัดดีครับบ’</p>
+      <p>แล้วจากข้อความแรกในวันนั้น<br>ก็ทำให้เราได้รักกันในทุกวันนี้</p>
+      <p>สุขสันต์วันครบรอบสองเดือนนะครับอ้อ</p>
+      <p>เค้ายังดีใจตลอด<br>ที่เค้ายังตื่นมาแล้วมีอ้อในทุก ๆ วัน</p>
+      <p class="sign">จากปัง</p>
+      <button class="cta" data-go="restart">ดูเรื่องราวอีกครั้ง</button>
+    </div>
+  </section>
+</main>
+
+<nav class="nav">
+  <button id="prevBtn" aria-label="ย้อนกลับ">‹ ย้อนกลับ</button>
+  <span class="count" id="count"></span>
+  <button id="nextBtn" aria-label="ไปต่อ">ไปต่อ ›</button>
+</nav>
+
+<script>
+const FADE = 400;
+const scenes = [...document.querySelectorAll('.scene')];
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+const countEl = document.getElementById('count');
+const bar = document.getElementById('bar');
+let cur = -1, busy = false, shownAt = 0, safetyTimer = null;
+
+function show(i){
+  if (i < 0 || i >= scenes.length || i === cur || busy) return;
+  busy = true;
+  const prev = scenes[cur], next = scenes[i];
+
+  if (prev){
+    prev.classList.remove('active','skip');
+    prev.classList.add('leaving');
+  }
+  next.classList.remove('play','skip','leaving');
+  void next.offsetWidth;
+  next.classList.add('active','play');
+  const letter = next.querySelector('.letter');
+  if (letter) letter.scrollTop = 0;
+
+  cur = i; shownAt = performance.now();
+  updateUI();
+
+  setTimeout(() => {
+    if (prev) prev.classList.remove('leaving','play');
+    busy = false;
+  }, FADE + 20);
+
+  clearTimeout(safetyTimer);
+  const dur = +next.dataset.dur || 0;
+  safetyTimer = setTimeout(() => { if (scenes[cur] === next) next.classList.add('skip'); }, dur + FADE + 400);
+}
+
+function go(d){
+  const s = scenes[cur];
+  if (d > 0 && 'nonext' in s.dataset) return;
+  show(cur + d);
+}
+
+function updateUI(){
+  const s = scenes[cur], last = scenes.length - 1;
+  prevBtn.classList.toggle('off', cur === 0);
+  nextBtn.classList.toggle('off', 'nonext' in s.dataset || cur === last);
+  const story = cur > 0;
+  countEl.classList.toggle('off', !story);
+  countEl.textContent = story ? `${cur} / ${last}` : '';
+  bar.style.width = (cur / last * 100) + '%';
+}
+
+prevBtn.addEventListener('click', e => { e.stopPropagation(); go(-1); });
+nextBtn.addEventListener('click', e => { e.stopPropagation(); go(1); });
+document.querySelectorAll('[data-go]').forEach(b => b.addEventListener('click', e => {
+  e.stopPropagation();
+  if (b.dataset.go === 'next') show(cur + 1);
+  if (b.dataset.go === 'restart') show(0);
+}));
+
+document.getElementById('app').addEventListener('click', e => {
+  if (busy || e.target.closest('button,.letter')) return;
+  const s = scenes[cur];
+  if (performance.now() - shownAt < (+s.dataset.dur || 0)){
+    s.classList.add('skip'); shownAt = 0; return;
+  }
+  if ('tap' in s.dataset) go(1);
+});
+
+let tx = 0, ty = 0;
+document.addEventListener('touchstart', e => { tx = e.touches[0].clientX; ty = e.touches[0].clientY; }, {passive:true});
+document.addEventListener('touchend', e => {
+  const dx = e.changedTouches[0].clientX - tx, dy = e.changedTouches[0].clientY - ty;
+  if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) go(dx < 0 ? 1 : -1);
+}, {passive:true});
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight') go(1);
+  if (e.key === 'ArrowLeft') go(-1);
+});
+
+show(0);
+</script>
+</body>
+</html>
