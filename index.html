@@ -274,7 +274,7 @@ body{font-family:'IBM Plex Sans Thai',sans-serif;font-weight:300;-webkit-font-sm
     inset 0 0 0 1px rgba(0,0,0,.30),
     0 20px 34px rgba(0,0,0,.55),
     0 2px 0 #2a2420;
-  transition:transform 1.9s cubic-bezier(.22,.75,.2,1),box-shadow .6s ease;
+  transition:transform 1.02s cubic-bezier(.2,.86,.28,1.01),box-shadow .7s ease;
   will-change:transform;
 }
 .lid::before{content:'';position:absolute;inset:0;border-radius:inherit;opacity:.26;pointer-events:none;
@@ -283,7 +283,16 @@ body{font-family:'IBM Plex Sans Thai',sans-serif;font-weight:300;-webkit-font-sm
 .lid::after{content:'';position:absolute;inset:6px;border-radius:7px;pointer-events:none;
   box-shadow:inset 0 1px 0 rgba(255,255,255,.22),inset 0 -1px 0 rgba(0,0,0,.35)}
 .box.open .lid{transform:rotateX(-108deg);box-shadow:0 10px 20px rgba(0,0,0,.45)}
-.box.open .latch{opacity:0;pointer-events:none;transition:opacity .35s .45s}
+.box.shake{animation:boxShake .38s cubic-bezier(.36,.07,.19,.97)}
+@keyframes boxShake{0%,100%{transform:translate3d(0,0,0) rotate(0)}
+  18%{transform:translate3d(.7px,-.6px,0) rotate(.12deg)}
+  36%{transform:translate3d(-.6px,.5px,0) rotate(-.1deg)}
+  54%{transform:translate3d(.4px,.3px,0) rotate(.06deg)}
+  72%{transform:translate3d(-.3px,-.2px,0) rotate(-.04deg)}}
+.box-light{position:absolute;inset:0;border-radius:12px;pointer-events:none;opacity:0;
+  background:radial-gradient(ellipse at 50% 30%,rgba(255,226,175,.8),rgba(255,197,128,.3) 42%,transparent 72%);
+  filter:blur(5px);mix-blend-mode:screen;transition:opacity 1s ease .15s}
+.box.open .box-light{opacity:.85}
 .box.open .engrave{opacity:0;transition:opacity .35s}
 .engrave{position:absolute;left:0;right:0;top:31%;text-align:center;pointer-events:none;
   font-family:'Cormorant Garamond',serif;font-size:1.02rem;letter-spacing:.30em;padding-left:.30em;
@@ -298,23 +307,31 @@ body{font-family:'IBM Plex Sans Thai',sans-serif;font-weight:300;-webkit-font-sm
 .scratch.d{background:linear-gradient(90deg,transparent,rgba(0,0,0,.35),transparent)}
 
 /* สลัก */
-.latch{position:absolute;left:50%;bottom:-20px;transform:translateX(-50%);width:60px;height:52px;
-  background:none;border:0;padding:0;z-index:24;cursor:pointer;-webkit-tap-highlight-color:transparent;
-  touch-action:manipulation}
+.latch{position:absolute;left:50%;top:160px;transform:translateX(-50%);width:60px;height:52px;
+  background:none;border:0;padding:0;z-index:24;pointer-events:none}
 .latch .plate{position:absolute;left:6px;right:6px;bottom:0;height:32px;border-radius:5px 5px 9px 9px;
   background:linear-gradient(180deg,#e0c48c,#bd9a60 46%,#8b6b3d);
   box-shadow:inset 0 1px 0 rgba(255,255,255,.7),inset 0 -2px 3px rgba(0,0,0,.45),0 3px 7px rgba(0,0,0,.55)}
-.latch .plate::after{content:'';position:absolute;left:50%;top:11px;width:9px;height:12px;
-  transform:translateX(-50%);border-radius:50% 50% 42% 42%;
-  background:radial-gradient(circle at 40% 30%,#4a3a26,#241b12);box-shadow:inset 0 1px 1px rgba(255,255,255,.15)}
+.lock-hole{position:absolute;left:50%;top:11px;width:9px;height:12px;transform:translateX(-50%);
+  border-radius:50% 50% 42% 42%;background:radial-gradient(circle at 40% 30%,#4a3a26,#241b12);
+  box-shadow:inset 0 1px 1px rgba(255,255,255,.15);transition:box-shadow .3s}
+.lock-glow{position:absolute;left:50%;top:17px;width:56px;height:56px;transform:translate(-50%,-50%);
+  border-radius:50%;pointer-events:none;opacity:0;transition:opacity .3s;
+  background:radial-gradient(circle,rgba(255,226,170,.6),rgba(201,168,106,.18) 45%,transparent 70%)}
+.box.near .lock-glow{opacity:.55}
+.box.armed .lock-glow{opacity:1;animation:lockPulse 1.1s ease-in-out infinite}
+@keyframes lockPulse{50%{transform:translate(-50%,-50%) scale(1.18)}}
+.box.near .lock-hole{box-shadow:inset 0 1px 1px rgba(255,255,255,.2),0 0 8px 2px rgba(227,198,140,.55)}
+.box.armed .lock-hole{box-shadow:inset 0 1px 1px rgba(255,255,255,.25),0 0 12px 4px rgba(255,220,160,.8)}
+.box.near .latch .plate{filter:brightness(1.05);box-shadow:inset 0 1px 0 rgba(255,255,255,.7),inset 0 -2px 3px rgba(0,0,0,.45),0 3px 7px rgba(0,0,0,.55),0 0 12px 2px rgba(227,198,140,.45)}
+.box.armed .latch .plate{box-shadow:inset 0 1px 0 rgba(255,255,255,.75),inset 0 -2px 3px rgba(0,0,0,.45),0 3px 7px rgba(0,0,0,.55),0 0 18px 5px rgba(255,220,160,.7)}
 .latch .hasp{position:absolute;left:50%;top:4px;width:22px;height:26px;transform:translateX(-50%);
   transform-origin:50% 4px;border-radius:5px 5px 3px 3px;
   background:linear-gradient(180deg,#f0d7a2,#c9a86a 52%,#9a7a45);
   box-shadow:inset 0 1px 0 rgba(255,255,255,.75),0 2px 5px rgba(0,0,0,.5);
   transition:transform .5s cubic-bezier(.4,0,.2,1),box-shadow .5s}
-.latch:focus-visible{outline:2px solid rgba(201,168,106,.7);outline-offset:4px;border-radius:8px}
 .box.unlocked .latch .hasp{transform:translateX(-50%) rotateX(78deg);box-shadow:0 6px 10px rgba(0,0,0,.4)}
-.box.unlocked .latch .plate{filter:brightness(1.06)}
+.box.unlocked .latch .plate{filter:brightness(1.08);transform:translateY(2px);transition:transform .5s var(--ease),filter .5s}
 .latch::before{content:'';position:absolute;left:50%;bottom:-2px;width:66px;height:42px;transform:translateX(-50%);
   border-radius:50%;border:1px solid rgba(201,168,106,.32);pointer-events:none;
   animation:latchRing 3.2s ease-in-out infinite}
@@ -327,6 +344,54 @@ body{font-family:'IBM Plex Sans Thai',sans-serif;font-weight:300;-webkit-font-sm
 .box.unlocked .latch-hint{opacity:0;animation:none;transition:opacity .3s}
 
 /* ---------- รูปในกล่อง ---------- */
+
+/* ---------- กุญแจ ---------- */
+.key-zone{position:absolute;left:50%;bottom:0;transform:translateX(-50%);z-index:40;
+  display:flex;flex-direction:column;align-items:center;gap:2px;pointer-events:none;
+  width:min(280px,86vw)}
+.key-zone::before{content:'';position:absolute;left:50%;top:22px;width:78px;height:14px;
+  transform:translateX(-50%);border-radius:50%;pointer-events:none;
+  background:radial-gradient(ellipse at 50% 50%,rgba(0,0,0,.55),transparent 72%);
+  filter:blur(3px);transition:opacity .4s}
+.key-zone.picked::before{opacity:.22}
+.key-zone.done::before{opacity:0}
+.key{position:relative;width:64px;height:58px;display:flex;align-items:center;justify-content:center;
+  background:none;border:0;padding:0;cursor:grab;pointer-events:auto;
+  touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;
+  -webkit-tap-highlight-color:transparent;
+  transform:translate3d(var(--kx,0px),var(--ky,0px),0) rotate(var(--kr,-78deg)) scale(var(--ks,1));
+  transition:transform .55s cubic-bezier(.22,.61,.36,1),opacity .4s;will-change:transform;z-index:2}
+.key.picked{--ks:1.06;transition:none;cursor:grabbing;z-index:60}
+.key.snapping{transition:transform .26s cubic-bezier(.2,.9,.3,1.12)}
+.key.returning{transition:transform .55s cubic-bezier(.22,.8,.28,1.02)}
+.key.inserted{--ks:.92;pointer-events:none;cursor:default;opacity:.95;transition:transform .55s cubic-bezier(.22,.61,.36,1),opacity .4s}
+.key:focus-visible{outline:2px solid rgba(201,168,106,.7);outline-offset:6px;border-radius:50%}
+.key-svg{width:26px;height:64px;overflow:visible;
+  filter:drop-shadow(0 2px 2px rgba(0,0,0,.55)) drop-shadow(0 7px 12px rgba(0,0,0,.35));
+  transform:rotate(var(--turn,0deg));transform-origin:50% 92%;
+  transition:transform .55s cubic-bezier(.3,.8,.3,1)}
+.key.picked .key-svg{filter:drop-shadow(0 0 5px rgba(227,198,140,.55)) drop-shadow(0 10px 16px rgba(0,0,0,.5))}
+.key.holding{--ks:.97}
+.key.holding::after{content:'';position:absolute;inset:3px;border-radius:50%;
+  border:1px solid rgba(201,168,106,.55);box-shadow:0 0 16px rgba(201,168,106,.25);
+  animation:holdPulse .34s ease-out}
+@keyframes holdPulse{0%{transform:scale(.7);opacity:0}35%{opacity:.9}100%{transform:scale(1.08);opacity:0}}
+.key-hint{margin:0;font-size:.68rem;line-height:1.45;letter-spacing:.02em;
+  color:rgba(239,230,214,.62);text-align:center;transition:opacity .5s var(--ease);max-width:250px}
+.key-zone.done .key-hint{opacity:0}
+.key.attn{animation:keyAttn 1.2s var(--ease)}
+@keyframes keyAttn{0%,100%{filter:none}20%,60%{filter:drop-shadow(0 0 8px rgba(227,198,140,.75))}}
+
+/* ---------- แนวทางลากกุญแจ ---------- */
+.key-guide{position:absolute;inset:0;width:100%;height:100%;z-index:30;pointer-events:none;
+  opacity:0;transition:opacity .25s}
+.key-guide.show{opacity:1}
+.key-guide path{fill:none;stroke-linecap:round}
+.key-guide .trail-glow{stroke:rgba(227,198,140,.16);stroke-width:7}
+.key-guide .trail{stroke:rgba(227,198,140,.6);stroke-width:2;stroke-dasharray:1 7;
+  animation:trailMove 1.4s linear infinite;filter:drop-shadow(0 0 3px rgba(201,168,106,.5))}
+@keyframes trailMove{to{stroke-dashoffset:-16}}
+
 .pile-mask{position:absolute;inset:0;z-index:3;border-radius:10px;pointer-events:none}
 .box:not(.open) .pile-mask{overflow:hidden}
 .pile-mask::after{content:'';position:absolute;inset:0;border-radius:10px;pointer-events:none;
@@ -348,13 +413,15 @@ body{font-family:'IBM Plex Sans Thai',sans-serif;font-weight:300;-webkit-font-sm
 .photo::after{content:'';position:absolute;inset:0;border-radius:3px;pointer-events:none;
   background:linear-gradient(118deg,rgba(255,255,255,.18),transparent 34%,transparent 68%,rgba(60,44,30,.13));
   mix-blend-mode:soft-light}
-.photo.lifted{--ty:-16px;--sc:1.03;z-index:40;
+.photo.lifted,.photo.selected{--ty:-16px;--sc:1.03;z-index:40;
   box-shadow:0 2px 0 rgba(255,255,255,.6) inset,0 16px 26px rgba(0,0,0,.5),0 32px 52px rgba(0,0,0,.4)}
+.box:not(.opened) .photo{pointer-events:none}
 .photo.dragging{transition:none;z-index:45;cursor:grabbing;
   box-shadow:0 2px 0 rgba(255,255,255,.6) inset,0 22px 34px rgba(0,0,0,.55),0 40px 60px rgba(0,0,0,.45)}
 .photo:focus-visible{outline:2px solid rgba(201,168,106,.8);outline-offset:2px}
-.box.open .pile{animation:pileIn .85s var(--ease) .45s both}
-@keyframes pileIn{0%{opacity:.15}100%{opacity:1}}
+.box.open .pile{animation:pileSettle 1.05s cubic-bezier(.22,.75,.2,1) .18s both}
+@keyframes pileSettle{0%{opacity:.12;transform:translateY(7px) scale(.995)}
+  70%{opacity:1}100%{opacity:1;transform:none}}
 
 /* ---------- ปุ่มด้านล่าง ---------- */
 .mb-actions{flex:0 0 auto;text-align:center;position:relative;z-index:3;padding-top:12px}
@@ -456,9 +523,17 @@ body{font-family:'IBM Plex Sans Thai',sans-serif;font-weight:300;-webkit-font-sm
 @media (max-width:359px){
   .box-wrap{transform:scale(.9)}
 }
+@media (max-height:720px){
+  .box-wrap{transform:scale(.9)}
+}
+@media (max-height:660px){
+  .box-wrap{transform:scale(.82)}
+}
 @media (prefers-reduced-motion:reduce){
-  .lid,.photo,.v-card,.viewer,.sheet,.v-btn{transition-duration:1ms!important}
-  .latch-hint{animation:none}
+  .lid,.photo,.v-card,.viewer,.sheet,.v-btn,.key,.key-svg,.box-light{transition-duration:1ms!important}
+  .latch-hint,.key-guide .trail,.key.attn{animation:none}
+  .box.shake{animation:none}
+  .box.armed .lock-glow{animation:none}
 }
 
 @media (min-width:768px){ :root{--fig:min(34vh,260px)} .scene{padding-top:48px} }
@@ -648,7 +723,7 @@ body{font-family:'IBM Plex Sans Thai',sans-serif;font-weight:300;-webkit-font-sm
     <div class="mb-head a-up">
       <p class="mb-eyebrow">Memory Box</p>
       <h2 class="mb-title">กล่องความทรงจำของเรา</h2>
-      <p class="mb-sub" id="mbSub">แตะที่สลักเพื่อเปิดกล่อง</p>
+      <p class="mb-sub" id="mbSub">ใช้กุญแจไขกล่องความทรงจำของเรา</p>
     </div>
 
     <div class="mb-stage">
@@ -656,7 +731,7 @@ body{font-family:'IBM Plex Sans Thai',sans-serif;font-weight:300;-webkit-font-sm
         <div class="box" id="box">
           <div class="box-back"></div>
           <div class="box-rim"></div>
-          <div class="box-inner"></div>
+          <div class="box-inner"><span class="box-light"></span></div>
           <div class="pile-mask">
             <div class="pile" id="pile">
               <button class="photo" type="button" data-photo="0" style="--x:0px;--y:-10px;--w:98px;--r:-8deg;--z:5" aria-label="เปิดความทรงจำที่ 1">
@@ -696,12 +771,44 @@ body{font-family:'IBM Plex Sans Thai',sans-serif;font-weight:300;-webkit-font-sm
             <i class="scratch" style="left:24px;top:58px;width:74px;transform:rotate(-8deg)"></i>
             <i class="scratch d" style="right:30px;top:98px;width:52px;transform:rotate(6deg)"></i>
             <i class="scratch" style="left:52px;top:122px;width:38px;transform:rotate(3deg)"></i>
-            <button class="latch" id="latch" type="button" aria-label="ปลดสลักเปิดกล่อง" aria-expanded="false">
-              <span class="hasp"></span>
-              <span class="plate"></span>
-            </button>
+          </div>
+          <div class="latch" id="latch" aria-hidden="true">
+            <span class="hasp"></span>
+            <span class="plate">
+              <span class="lock-hole" id="lockHole"></span>
+              <span class="lock-glow"></span>
+            </span>
           </div>
         </div>
+      </div>
+      <svg class="key-guide" id="keyGuide" aria-hidden="true">
+        <path class="trail-glow" id="keyTrailGlow"></path>
+        <path class="trail" id="keyTrail"></path>
+      </svg>
+      <div class="key-zone" id="keyZone">
+        <button class="key" id="key" type="button" aria-label="กดค้างแล้วลากกุญแจไปที่รูล็อก" aria-describedby="keyHint">
+          <svg class="key-svg" viewBox="0 0 40 100" aria-hidden="true">
+            <defs>
+              <linearGradient id="keyGrad" x1="6" y1="4" x2="34" y2="96" gradientUnits="userSpaceOnUse">
+                <stop offset="0" stop-color="#f3dfae"/><stop offset=".28" stop-color="#d4b277"/>
+                <stop offset=".5" stop-color="#a9854c"/><stop offset=".68" stop-color="#e0c28a"/>
+                <stop offset=".86" stop-color="#b18a4f"/><stop offset="1" stop-color="#7d5f34"/>
+              </linearGradient>
+              <linearGradient id="keyEdge" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0" stop-color="#fff2cf" stop-opacity=".55"/>
+                <stop offset="1" stop-color="#5b441f" stop-opacity=".4"/>
+              </linearGradient>
+            </defs>
+            <path d="M20 2.5c-8.3 0-15 6.7-15 15s6.7 15 15 15 15-6.7 15-15-6.7-15-15-15Zm0 6.4a8.6 8.6 0 1 1 0 17.2 8.6 8.6 0 0 1 0-17.2Z" fill="url(#keyGrad)"/>
+            <path d="M20 5.5c-6.6 0-12 5.4-12 12s5.4 12 12 12 12-5.4 12-12-5.4-12-12-12Zm0 6a6 6 0 1 1 0 12 6 6 0 0 1 0-12Z" fill="none" stroke="url(#keyEdge)" stroke-width=".8"/>
+            <rect x="15.4" y="30.5" width="9.2" height="7" rx="2.2" fill="url(#keyGrad)"/>
+            <rect x="17.6" y="35.5" width="4.8" height="57" rx="2.2" fill="url(#keyGrad)"/>
+            <path d="M22.4 71.5h8.4v4.4h-5.6v3.4h5.6v4.6h-5.6v4.2h-2.8Z" fill="url(#keyGrad)"/>
+            <path d="M19.2 38.5v48.5" stroke="#fff2cf" stroke-width=".9" opacity=".35" stroke-linecap="round"/>
+            <path d="M17.8 30.5h4.4" stroke="#5b441f" stroke-width=".7" opacity=".45"/>
+          </svg>
+        </button>
+        <p class="key-hint" id="keyHint">กดค้างแล้วลากกุญแจไปที่รูล็อก</p>
       </div>
     </div>
 
@@ -839,7 +946,6 @@ document.addEventListener('touchend', e => {
 /* ================= Memory Box ================= */
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const boxEl = document.getElementById('box');
-const latch = document.getElementById('latch');
 const mbSub = document.getElementById('mbSub');
 const mbPrompt = document.getElementById('mbPrompt');
 const mbStatus = document.getElementById('mbStatus');
@@ -943,86 +1049,283 @@ function softTick(pitch){
   o.connect(g); g.connect(ac.destination); o.start(t); o.stop(t + .1);
 }
 
-/* ---------- เปิดกล่อง ---------- */
-latch.addEventListener('click', e => {
-  e.stopPropagation();
-  if (boxOpen) return;
-  boxEl.classList.add('unlocked');
-  latch.setAttribute('aria-expanded','true');
-  latchClick(); buzz(12);
-  mbSub.textContent = 'กำลังเปิดกล่อง...';
+/* ---------- กุญแจ / เปิดกล่อง ---------- */
+const keyZone = document.getElementById('keyZone');
+const keyEl = document.getElementById('key');
+const lockHole = document.getElementById('lockHole');
+const keyGuide = document.getElementById('keyGuide');
+const keyTrail = document.getElementById('keyTrail');
+const keyTrailGlow = document.getElementById('keyTrailGlow');
+
+const HOLD_MS = 320;
+const SNAP_R = 52;
+const NEAR_R = 120;
+const KEY_TIP = 30;
+let keyHolding = false, keyHoldTimer = null, keyDrag = null;
+let keyPointer = null, keyStart = null, keyArmed = false, unlockStarted = false;
+let keyKbTimer = null;
+
+function keyBaseCenter(){
+  const zr = keyZone.getBoundingClientRect();
+  return {x: zr.left + keyEl.offsetLeft + keyEl.offsetWidth / 2,
+          y: zr.top + keyEl.offsetTop + keyEl.offsetHeight / 2};
+}
+function holeCenter(){
+  const r = lockHole.getBoundingClientRect();
+  return {x: r.left + r.width / 2, y: r.top + r.height / 2};
+}
+function keyTipPoint(){
+  const r = keyEl.getBoundingClientRect();
+  return {x: r.left + r.width / 2, y: r.top + r.height / 2 + KEY_TIP};
+}
+function setKeyTransform(px, py, tilt){
+  const b = keyBaseCenter();
+  keyEl.style.setProperty('--kx', (px - b.x).toFixed(1) + 'px');
+  keyEl.style.setProperty('--ky', (py - b.y).toFixed(1) + 'px');
+  if (tilt !== undefined) keyEl.style.setProperty('--kr', tilt.toFixed(2) + 'deg');
+}
+function clearKeyTransform(){
+  keyEl.style.setProperty('--kx', '0px');
+  keyEl.style.setProperty('--ky', '0px');
+  keyEl.style.setProperty('--kr', '-78deg');
+  keyEl.style.setProperty('--ks', '1');
+}
+function updateGuide(){
+  if (!keyDrag) return;
+  const zr = document.querySelector('.mb-stage').getBoundingClientRect();
+  const hc = holeCenter();
+  const tipNow = keyTipPoint();
+  const sx = tipNow.x - zr.left, sy = tipNow.y - zr.top, hx = hc.x - zr.left, hy = hc.y - zr.top;
+  const mx = (sx + hx) / 2 + (hy - sy) * .12;
+  const my = (sy + hy) / 2 + (sx - hx) * .12;
+  const d = `M${sx.toFixed(1)} ${sy.toFixed(1)} Q${mx.toFixed(1)} ${my.toFixed(1)} ${hx.toFixed(1)} ${hy.toFixed(1)}`;
+  keyTrail.setAttribute('d', d);
+  keyTrailGlow.setAttribute('d', d);
+  keyGuide.setAttribute('viewBox', `0 0 ${zr.width} ${zr.height}`);
+  const tip = keyTipPoint();
+  const dist = Math.hypot(tip.x - hc.x, tip.y - hc.y);
+  const near = dist < NEAR_R, armed = dist < SNAP_R;
+  boxEl.classList.toggle('near', near);
+  boxEl.classList.toggle('armed', armed);
+  keyGuide.style.opacity = (.28 + Math.max(0, (NEAR_R - dist) / NEAR_R) * .5).toFixed(2);
+  if (armed && !keyArmed){ softTick(880); buzz(4); }
+  keyArmed = armed;
+}
+function activateKeyDrag(){
+  if (unlockStarted || boxOpen || keyDrag) return;
+  keyHolding = false; clearTimeout(keyHoldTimer);
+  keyEl.classList.remove('holding');
+  keyEl.classList.add('picked');
+  keyZone.classList.add('picked');
+  keyEl.style.setProperty('--kr', '0deg');
+  keyEl.style.setProperty('--ks', '1.06');
+  keyDrag = {sx: keyStart ? keyStart.x : 0, sy: keyStart ? keyStart.y : 0, pid: keyPointer ? keyPointer.id : null};
+  if (keyPointer) setKeyTransform(keyPointer.x, keyPointer.y - 14, 0);
+  keyGuide.classList.add('show');
+  updateGuide();
+  softTick(960); buzz(8);
+}
+function cancelKeyHold(){
+  keyHolding = false; clearTimeout(keyHoldTimer);
+  keyEl.classList.remove('holding');
+}
+function returnKey(){
+  keyDrag = null; keyHolding = false; clearTimeout(keyHoldTimer); keyArmed = false;
+  keyEl.classList.remove('picked');
+  keyEl.classList.add('returning');
+  keyZone.classList.remove('picked');
+  keyGuide.classList.remove('show');
+  boxEl.classList.remove('near', 'armed');
+  clearKeyTransform();
+  softTick(360); buzz(4);
+  setTimeout(() => keyEl.classList.remove('returning'), 620);
+}
+function snapKeyToLock(){
+  keyDrag = null; keyArmed = false;
+  keyEl.classList.remove('picked');
+  keyEl.classList.add('snapping');
+  keyZone.classList.remove('picked');
+  keyGuide.classList.remove('show');
+  boxEl.classList.remove('near', 'armed');
+  const b = keyBaseCenter(), hc = holeCenter();
+  keyEl.style.setProperty('--kx', (hc.x - b.x).toFixed(1) + 'px');
+  keyEl.style.setProperty('--ky', (hc.y - KEY_TIP - b.y).toFixed(1) + 'px');
+  keyEl.style.setProperty('--kr', '0deg');
+  keyEl.style.setProperty('--ks', '1');
+  latchClick(); buzz([8, 26, 12]);
+  setTimeout(startUnlock, reduceMotion ? 0 : 150);
   setTimeout(() => {
-    boxEl.classList.add('open');
-    boxOpen = true;
+    keyEl.classList.remove('snapping');
+    keyEl.classList.add('inserted');
+    keyZone.classList.add('done');
+  }, reduceMotion ? 0 : 260);
+}
+function startUnlock(){
+  if (unlockStarted) return;
+  unlockStarted = true;
+  boxEl.classList.add('unlocked');
+  keyEl.style.setProperty('--turn', '34deg');
+  softTick(160);
+  setTimeout(() => {
+    boxEl.classList.add('open', 'shake');
     paperRustle(); buzz([6, 40, 10]);
-    mbSub.textContent = 'แตะรูปเพื่อหยิบขึ้นมา หรือลากขึ้นเพื่อเปิดดู';
-    mbPrompt.textContent = 'เลือกความทรงจำที่อยากเปิดดู';
-  }, 520);
+    mbSub.textContent = 'กำลังเปิดกล่อง...';
+    setTimeout(() => boxEl.classList.remove('shake'), 520);
+    setTimeout(() => {
+      boxEl.classList.add('opened');
+      boxOpen = true;
+      mbSub.textContent = 'แตะรูปเพื่อหยิบขึ้นมา หรือลากขึ้นเพื่อเปิดดู';
+      mbPrompt.textContent = 'เลือกความทรงจำที่อยากเปิดดู';
+      mbStatus.textContent = '';
+    }, reduceMotion ? 30 : 1050);
+  }, reduceMotion ? 0 : 30);
+}
+
+keyEl.addEventListener('contextmenu', e => e.preventDefault());
+keyEl.addEventListener('pointerdown', e => {
+  if (unlockStarted || boxOpen) return;
+  if (e.pointerType === 'mouse' && e.button !== 0) return;
+  e.preventDefault();
+  ensureAudio();
+  keyEl.classList.remove('returning', 'attn');
+  clearTimeout(keyHoldTimer);
+  keyHolding = true;
+  keyStart = {x: e.clientX, y: e.clientY};
+  keyPointer = {x: e.clientX, y: e.clientY, id: e.pointerId};
+  keyEl.classList.add('holding');
+  try{ keyEl.setPointerCapture(e.pointerId); }catch(err){}
+  keyHoldTimer = setTimeout(activateKeyDrag, HOLD_MS);
 });
+keyEl.addEventListener('pointermove', e => {
+  if (keyPointer){ keyPointer.x = e.clientX; keyPointer.y = e.clientY; }
+  if (keyDrag){
+    e.preventDefault();
+    const tilt = Math.max(-12, Math.min(12, (e.clientX - keyDrag.sx) * .05));
+    setKeyTransform(e.clientX, e.clientY - 14, tilt);
+    updateGuide();
+    return;
+  }
+  if (keyHolding && keyStart && Math.hypot(e.clientX - keyStart.x, e.clientY - keyStart.y) > 12){
+    cancelKeyHold();
+  }
+});
+keyEl.addEventListener('pointerup', e => {
+  if (keyDrag){
+    e.preventDefault();
+    const hc = holeCenter(), tip = keyTipPoint();
+    if (Math.hypot(tip.x - hc.x, tip.y - hc.y) < SNAP_R) snapKeyToLock();
+    else returnKey();
+    return;
+  }
+  cancelKeyHold();
+});
+keyEl.addEventListener('pointercancel', () => { if (keyDrag) returnKey(); else cancelKeyHold(); });
+keyEl.addEventListener('lostpointercapture', () => { if (keyDrag) returnKey(); else cancelKeyHold(); });
+document.addEventListener('touchmove', e => {
+  if (keyHolding || keyDrag) e.preventDefault();
+}, {passive:false});
+
+keyEl.addEventListener('keydown', e => {
+  if (e.key !== ' ' && e.key !== 'Enter') return;
+  e.preventDefault();
+  if (unlockStarted || boxOpen || keyKbTimer) return;
+  keyEl.classList.add('holding');
+  keyKbTimer = setTimeout(() => {
+    keyKbTimer = null;
+    keyEl.classList.remove('holding');
+    keyEl.classList.add('picked');
+    keyZone.classList.add('picked');
+    keyEl.style.setProperty('--kr', '0deg');
+    keyEl.style.setProperty('--ks', '1.06');
+    setTimeout(snapKeyToLock, 140);
+  }, HOLD_MS);
+});
+keyEl.addEventListener('keyup', e => {
+  if (e.key === ' ' || e.key === 'Enter'){
+    clearTimeout(keyKbTimer); keyKbTimer = null;
+    keyEl.classList.remove('holding');
+  }
+});
+
 boxEl.addEventListener('click', e => {
-  if (boxOpen || e.target.closest('.latch,.photo')) return;
-  mbSub.textContent = 'แตะที่สลักสีทองเพื่อเปิดกล่อง';
-  latch.animate([{transform:'translateX(-50%) scale(1)'},{transform:'translateX(-50%) scale(1.12)'},{transform:'translateX(-50%) scale(1)'}],
-    {duration:420, easing:'ease-in-out'});
+  if (boxOpen || unlockStarted || e.target.closest('.key,.photo')) return;
+  keyEl.classList.remove('attn'); void keyEl.offsetWidth; keyEl.classList.add('attn');
+  mbStatus.textContent = 'กดค้างที่กุญแจแล้วลากไปที่รูล็อกนะ';
+  setTimeout(() => { if (!boxOpen) mbStatus.textContent = ''; }, 2400);
 });
 
 /* ---------- รูปในกล่อง ---------- */
 const photoEls = [...document.querySelectorAll('.photo')];
+let selectedPhoto = null;
 
-function resetPhoto(el){
-  el.style.setProperty('--tx','0px');
-  el.style.setProperty('--ty','0px');
-  el.style.setProperty('--sc','1');
+function clearPhotoVars(el){
+  el.style.removeProperty('--tx');
+  el.style.removeProperty('--ty');
+  el.style.removeProperty('--sc');
   el.style.setProperty('--r', el.dataset.r0 || '0deg');
   el.classList.remove('dragging','lifted');
+}
+function resetPhoto(el){ clearPhotoVars(el); }
+function selectPhoto(el){
+  if (selectedPhoto && selectedPhoto !== el) selectedPhoto.classList.remove('selected');
+  selectedPhoto = el;
+  el.classList.add('selected');
+  clearPhotoVars(el);
+  softTick(540);
 }
 photoEls.forEach(el => {
   const idx = +el.dataset.photo;
   el.dataset.r0 = el.style.getPropertyValue('--r') || '0deg';
   el.addEventListener('pointerdown', e => {
-    if (!boxOpen || viewerOpen || sheetOpen) return;
+    if (!boxOpen || viewerOpen || sheetOpen || !boxEl.classList.contains('opened')) return;
     if (e.pointerType === 'mouse' && e.button !== 0) return;
     e.preventDefault();
     try{ el.setPointerCapture(e.pointerId); }catch(err){}
-    drag = {el, idx, sx:e.clientX, sy:e.clientY, dx:0, dy:0, moved:false,
+    drag = {el, idx, sx:e.clientX, sy:e.clientY, moved:false,
             t:performance.now(), r0:el.dataset.r0};
-    el.classList.remove('lifted');
-    el.classList.add('dragging');
-    el.style.setProperty('--sc','1.03');
+    el.classList.remove('dragging');
   });
   el.addEventListener('pointermove', e => {
     if (!drag || drag.el !== el) return;
-    drag.dx = e.clientX - drag.sx;
-    drag.dy = Math.min(0, e.clientY - drag.sy);
-    if (Math.abs(drag.dx) > 4 || Math.abs(e.clientY - drag.sy) > 4) drag.moved = true;
-    el.style.setProperty('--tx', (drag.dx * .55).toFixed(1) + 'px');
-    el.style.setProperty('--ty', drag.dy.toFixed(1) + 'px');
-    el.style.setProperty('--r', (parseFloat(drag.r0) + drag.dx * .035).toFixed(2) + 'deg');
+    const rawDx = e.clientX - drag.sx, rawDy = e.clientY - drag.sy;
+    if (!drag.moved && (Math.abs(rawDx) > 4 || Math.abs(rawDy) > 4)){
+      drag.moved = true;
+      el.classList.add('dragging');
+      el.classList.remove('lifted');
+    }
+    if (!drag.moved) return;
+    e.preventDefault();
+    el.style.setProperty('--tx', (rawDx * .55).toFixed(1) + 'px');
+    el.style.setProperty('--ty', Math.min(0, rawDy).toFixed(1) + 'px');
+    el.style.setProperty('--r', (parseFloat(drag.r0) + rawDx * .035).toFixed(2) + 'deg');
   });
   el.addEventListener('pointerup', e => {
     if (!drag || drag.el !== el) return;
-    const wasMoved = drag.moved, dist = drag.dy, idxNow = drag.idx, t0 = drag.t;
+    const wasMoved = drag.moved, rawDy = e.clientY - drag.sy;
+    const dist = Math.min(0, rawDy), idxNow = drag.idx, t0 = drag.t;
     drag = null;
     el.classList.remove('dragging');
-    if (dist < -58 || (wasMoved && dist < -26)){
+    if (wasMoved && (dist < -58 || rawDy < -26)){
       openViewer(idxNow, el);
       setTimeout(() => resetPhoto(el), 60);
-    } else if (!wasMoved && performance.now() - t0 < 600){
-      el.style.setProperty('--tx','0px');
-      el.style.setProperty('--ty','0px');
-      el.style.setProperty('--r', el.dataset.r0 || '0deg');
-      el.classList.add('lifted');
-      openViewer(idxNow, el);
-      setTimeout(() => el.classList.remove('lifted'), 60);
-    } else {
-      resetPhoto(el);
+      return;
     }
+    if (!wasMoved && performance.now() - t0 < 600){
+      if (selectedPhoto === el) openViewer(idxNow, el);
+      else selectPhoto(el);
+      return;
+    }
+    clearPhotoVars(el);
   });
-  el.addEventListener('pointercancel', () => { if (drag && drag.el === el) drag = null; resetPhoto(el); });
+  el.addEventListener('pointercancel', () => {
+    if (drag && drag.el === el) drag = null;
+    clearPhotoVars(el);
+  });
   el.addEventListener('click', e => {
     if (e.detail === 0 && boxOpen && !viewerOpen){   // keyboard activation
       e.stopPropagation();
-      openViewer(idx, el);
+      if (selectedPhoto === el) openViewer(idx, el);
+      else selectPhoto(el);
     }
   });
 });
@@ -1152,9 +1455,10 @@ randomBtn.addEventListener('click', e => {
   e.stopPropagation();
   ensureAudio();
   if (!boxOpen){
-    mbStatus.textContent = 'กำลังเปิดกล่องให้...';
-    latch.click();
-    setTimeout(() => { mbStatus.textContent = ''; openRandom(); }, 1300);
+    keyEl.classList.remove('attn'); void keyEl.offsetWidth; keyEl.classList.add('attn');
+    mbStatus.textContent = 'กดค้างที่กุญแจแล้วลากไปที่รูล็อกก่อนนะ';
+    mbSub.textContent = 'ใช้กุญแจไขกล่องความทรงจำของเรา';
+    setTimeout(() => { if (!boxOpen) mbStatus.textContent = ''; }, 2400);
   } else {
     openRandom();
   }
