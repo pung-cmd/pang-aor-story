@@ -188,6 +188,7 @@ body{font-family:'IBM Plex Sans Thai',sans-serif;font-weight:300;-webkit-font-sm
 .s11{
   --metal-hi:#9b9184;--metal:#6d645a;--metal-mid:#544c44;--metal-lo:#2f2a25;
   --gold:#c9a86a;--gold-hi:#e3c68c;--paper:#f2e9d8;--paper-2:#e4d7c1;--rose:#c4949a;
+  --key-gap:26px;
   background:
     radial-gradient(120% 52% at 50% 16%,rgba(201,168,106,.10),transparent 62%),
     radial-gradient(90% 46% at 50% 100%,rgba(196,148,154,.08),transparent 72%),
@@ -206,8 +207,10 @@ body{font-family:'IBM Plex Sans Thai',sans-serif;font-weight:300;-webkit-font-sm
   min-height:0;position:relative;z-index:2}
 
 /* ---------- กล่องโลหะ ---------- */
+.box-slot{width:300px;height:298px;margin-top:4px;flex:0 0 auto;
+  display:flex;justify-content:center;align-items:flex-start}
 .box-wrap{width:300px;height:298px;position:relative;perspective:1100px;perspective-origin:50% 58%;
-  margin-top:4px}
+  transform-origin:50% 0;flex:0 0 auto}
 .box{position:absolute;inset:0;transform-style:preserve-3d}
 .box::before{content:'';position:absolute;left:50%;bottom:-10px;width:82%;height:30px;
   transform:translateX(-50%);border-radius:50%;
@@ -346,7 +349,7 @@ body{font-family:'IBM Plex Sans Thai',sans-serif;font-weight:300;-webkit-font-sm
 /* ---------- รูปในกล่อง ---------- */
 
 /* ---------- กุญแจ ---------- */
-.key-zone{position:absolute;left:50%;bottom:0;transform:translateX(-50%);z-index:40;
+.key-zone{position:relative;z-index:40;margin-top:var(--key-gap);
   display:flex;flex-direction:column;align-items:center;gap:2px;pointer-events:none;
   width:min(280px,86vw)}
 .key-zone::before{content:'';position:absolute;left:50%;top:22px;width:78px;height:14px;
@@ -521,13 +524,20 @@ body{font-family:'IBM Plex Sans Thai',sans-serif;font-weight:300;-webkit-font-sm
 .sheet .save{border:1px solid rgba(201,168,106,.5);background:rgba(201,168,106,.16);color:#f2e4c7}
 
 @media (max-width:359px){
+  .box-slot{width:270px;height:268.2px}
   .box-wrap{transform:scale(.9)}
 }
 @media (max-height:720px){
+  .box-slot{width:270px;height:268.2px}
   .box-wrap{transform:scale(.9)}
+  .s11{--key-gap:24px}
+  .mb-actions{padding-top:6px}
 }
 @media (max-height:660px){
+  .box-slot{width:246px;height:244.36px}
   .box-wrap{transform:scale(.82)}
+  .s11{--key-gap:20px}
+  .mb-actions{padding-top:6px}
 }
 @media (prefers-reduced-motion:reduce){
   .lid,.photo,.v-card,.viewer,.sheet,.v-btn,.key,.key-svg,.box-light{transition-duration:1ms!important}
@@ -727,6 +737,7 @@ body{font-family:'IBM Plex Sans Thai',sans-serif;font-weight:300;-webkit-font-sm
     </div>
 
     <div class="mb-stage">
+      <div class="box-slot">
       <div class="box-wrap">
         <div class="box" id="box">
           <div class="box-back"></div>
@@ -780,6 +791,7 @@ body{font-family:'IBM Plex Sans Thai',sans-serif;font-weight:300;-webkit-font-sm
             </span>
           </div>
         </div>
+      </div>
       </div>
       <svg class="key-guide" id="keyGuide" aria-hidden="true">
         <path class="trail-glow" id="keyTrailGlow"></path>
