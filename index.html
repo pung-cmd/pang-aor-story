@@ -16,7 +16,7 @@
 <meta name="twitter:description" content="&#8203;">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500&family=Noto+Serif+Thai:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500&family=Noto+Serif+Thai:wght@300;400;500&family=Mali:wght@400;500&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet">
 <style>
 :root{
   --ink:#121110; --taupe:#5e554e; --taupe2:#958a7f;
@@ -454,8 +454,10 @@ body{font-family:'IBM Plex Sans Thai',sans-serif;font-weight:300;-webkit-font-sm
   font:inherit;font-size:1.35rem;line-height:1;cursor:pointer;
   -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
 .v-stage{position:relative;flex:1 1 auto;min-height:0;display:flex;align-items:center;justify-content:center;
-  z-index:2}
-.v-card{position:relative;will-change:transform}
+  perspective:1500px;z-index:2}
+.v-card{position:relative;transform-style:preserve-3d;cursor:pointer;
+  transition:transform .85s cubic-bezier(.25,.8,.25,1);will-change:transform}
+.v-card.flipped{transform:rotateY(180deg)}
 .v-face{position:absolute;inset:0;border-radius:4px;overflow:hidden;
   -webkit-backface-visibility:hidden;backface-visibility:hidden;
   box-shadow:0 26px 55px rgba(0,0,0,.62),0 4px 12px rgba(0,0,0,.45)}
@@ -463,6 +465,22 @@ body{font-family:'IBM Plex Sans Thai',sans-serif;font-weight:300;-webkit-font-sm
 .v-front::after{content:'';position:absolute;inset:0;pointer-events:none;
   box-shadow:inset 0 0 0 5px rgba(255,255,255,.20),inset 0 0 0 6px rgba(90,70,45,.16)}
 .v-front img{display:block;width:100%;height:100%;object-fit:cover}
+.v-back{transform:rotateY(180deg);display:flex;flex-direction:column;justify-content:center;
+  padding:var(--note-pad,clamp(18px,6vw,30px));
+  background:
+    radial-gradient(120% 80% at 20% 10%,rgba(255,255,255,.45),transparent 60%),
+    linear-gradient(160deg,#f4ecdc,#e9dcc5 72%,#e0d1b7);
+  box-shadow:inset 0 0 40px rgba(120,92,58,.16),
+    inset 0 0 0 1px rgba(120,92,58,.22),0 26px 55px rgba(0,0,0,.62)}
+.v-back::before{content:'';position:absolute;inset:0;pointer-events:none;opacity:.5;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='3' seed='9'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23p)' opacity='0.28'/%3E%3C/svg%3E");
+  background-size:120px 120px;mix-blend-mode:multiply}
+.v-note{position:relative;font-family:'Mali',cursive;font-weight:400;color:#4a3826;
+  font-size:var(--note-fs,clamp(.98rem,4.2vw,1.16rem));line-height:2.0;white-space:pre-line;
+  text-wrap:balance;overflow-wrap:break-word;transform:rotate(-.6deg)}
+.v-note .sign{display:block;text-align:right;margin-top:.7em;color:#6b533a;font-size:.92em}
+.v-doodle{position:absolute;right:14px;bottom:12px;width:26px;height:24px;opacity:.5}
+.v-doodle path{fill:none;stroke:#a4756c;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
 
 .v-info{position:relative;z-index:2;flex:0 0 auto;width:100%;max-width:430px;margin:0 auto;
   text-align:center;padding-top:14px}
@@ -471,6 +489,7 @@ body{font-family:'IBM Plex Sans Thai',sans-serif;font-weight:300;-webkit-font-sm
 .v-meta .dot{width:3px;height:3px;border-radius:50%;background:rgba(201,168,106,.6)}
 .v-caption{font-family:'Noto Serif Thai',serif;font-size:clamp(1.02rem,4.3vw,1.22rem);
   line-height:1.75;margin-top:7px;color:var(--cream)}
+.v-hint{font-size:.72rem;letter-spacing:.03em;color:var(--taupe2);margin-top:7px}
 .v-actions{display:flex;flex-direction:column;gap:8px;margin-top:13px}
 .v-btn{min-height:48px;padding:0 18px;border-radius:999px;cursor:pointer;
   border:1px solid rgba(239,230,214,.20);background:rgba(255,255,255,.035);
@@ -806,13 +825,18 @@ body{font-family:'IBM Plex Sans Thai',sans-serif;font-weight:300;-webkit-font-sm
   <div class="v-backdrop" id="vBackdrop"></div>
   <button class="v-close" id="vClose" type="button" aria-label="ปิด">×</button>
   <div class="v-stage">
-    <div class="v-card" id="vCard">
+    <div class="v-card" id="vCard" role="button" tabindex="0" aria-label="พลิกดูข้อความด้านหลังรูป">
       <div class="v-face v-front"><img id="vImg" alt="ภาพความทรงจำ" draggable="false"></div>
+      <div class="v-face v-back">
+        <div class="v-note" id="vNote"></div>
+        <svg class="v-doodle" viewBox="0 0 30 28" aria-hidden="true"><path d="M15 25C7 19 3 14 3 9.5 3 6 5.6 3.5 8.9 3.5c2.4 0 4.4 1.3 6.1 3.5 1.7-2.2 3.7-3.5 6.1-3.5 3.3 0 5.9 2.5 5.9 6C27 14 23 19 15 25z"/></svg>
+      </div>
     </div>
   </div>
   <div class="v-info">
     <div class="v-meta"><span id="vDate"></span><span class="dot"></span><span id="vPlace"></span></div>
     <p class="v-caption" id="vCaption"></p>
+    <p class="v-hint" id="vHint">แตะรูปเพื่ออ่านข้อความด้านหลัง</p>
     <div class="v-actions">
       <button class="v-btn" id="vReturn" type="button">เก็บกลับเข้ากล่อง</button>
     </div>
@@ -915,19 +939,27 @@ const viewer = document.getElementById('viewer');
 const vBackdrop = document.getElementById('vBackdrop');
 const vCard = document.getElementById('vCard');
 const vImg = document.getElementById('vImg');
+const vNote = document.getElementById('vNote');
 const vDate = document.getElementById('vDate');
 const vPlace = document.getElementById('vPlace');
 const vCaption = document.getElementById('vCaption');
+const vHint = document.getElementById('vHint');
 const vClose = document.getElementById('vClose');
 const vReturn = document.getElementById('vReturn');
 
 const memories = [
-  {src:'images/memory-01.jpg', date:'27 ตุลาคม 2026', place:'วิทยาลัยเทคนิคสุรินทร์', caption:'ถ่ายรูปหน้ากระจกด้วยกัน'},
-  {src:'images/memory-02.jpg', date:'17 ตุลาคม 2026', place:'ร้านตั้งเตา', caption:'กินหมูกระทะด้วยกันครั้งแรก'},
-  {src:'images/memory-03.jpg', date:'14 ตุลาคม 2026', place:'Instagram', caption:'โทรด้วยกันนานที่สุด'},
-  {src:'images/memory-04.jpg', date:'22 ตุลาคม 2026', place:'STC Cafe', caption:'ถ่ายรูปด้วยกัน'},
-  {src:'images/memory-05.jpg', date:'27 ตุลาคม 2026', place:'STC Cafe', caption:'อ้อถักเปียให้'},
-  {src:'images/memory-06.jpg', date:'15 ตุลาคม 2026', place:'ไปส่งอ้อที่บ้าน', caption:'ไปส่งอ้อที่บ้าน อ้อถ่ายไว้ น่ารักค่ะ'}
+  {src:'images/memory-01.jpg', date:'27 ตุลาคม 2026', place:'วิทยาลัยเทคนิคสุรินทร์', caption:'ถ่ายรูปหน้ากระจกด้วยกัน',
+   note:'ถ่ายด้วยกันหน้ากระจกอย่างเท่อ่ะะะะ'},
+  {src:'images/memory-02.jpg', date:'17 ตุลาคม 2026', place:'ร้านตั้งเตา', caption:'กินหมูกระทะด้วยกันครั้งแรก',
+   note:'กินหมูทะกับอ้ออออ โคตรอร่อยยยยยยยยย'},
+  {src:'images/memory-03.jpg', date:'14 ตุลาคม 2026', place:'Instagram', caption:'โทรด้วยกันนานที่สุด',
+   note:'คอลกัน5ชั่วโมงงง อย่างโหดดดด'},
+  {src:'images/memory-04.jpg', date:'22 ตุลาคม 2026', place:'STC Cafe', caption:'ถ่ายรูปด้วยกัน',
+   note:'ถ่ายรูปด้วยกันที่คาเฟ่ น่ารักมากกกกก'},
+  {src:'images/memory-05.jpg', date:'27 ตุลาคม 2026', place:'STC Cafe', caption:'อ้อถักเปียให้',
+   note:'อ้ถักเปียให้ น่ารักมากกกกๆ ขอบคุณค่ะะะ'},
+  {src:'images/memory-06.jpg', date:'15 ตุลาคม 2026', place:'ไปส่งอ้อที่บ้าน', caption:'ไปส่งอ้อที่บ้าน',
+   note:'ไปส่งอ้อที่บ้าน อ้อถ่ายไว้ น่ารักค่ะ'}
 ];
 
 let boxOpen = false, viewerOpen = false, activeIndex = 0;
@@ -1272,6 +1304,13 @@ photoEls.forEach(el => {
 });
 
 /* ---------- Viewer ---------- */
+function esc(s){ return String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+function noteHTML(text){
+  return esc(text).replace(/\n/g,'<br>') + '<span class="sign">— ปัง</span>';
+}
+function setNote(){
+  vNote.innerHTML = noteHTML(memories[activeIndex].note);
+}
 function sizeCard(thumbEl){
   const stage = document.querySelector('.v-stage');
   const sr = stage.getBoundingClientRect();
@@ -1286,6 +1325,8 @@ function sizeCard(thumbEl){
   if (h > maxH){ h = maxH; w = h * ar; }
   vCard.style.width = Math.max(120, w) + 'px';
   vCard.style.height = Math.max(120, h) + 'px';
+  vCard.style.setProperty('--note-fs', Math.max(13, Math.min(16.5, h / 40 + 8)).toFixed(1) + 'px');
+  vCard.style.setProperty('--note-pad', Math.max(16, Math.min(30, h * .06)).toFixed(0) + 'px');
 }
 function openViewer(i, thumbEl){
   if (viewerOpen) return;
@@ -1296,6 +1337,9 @@ function openViewer(i, thumbEl){
   vDate.textContent = m.date;
   vPlace.textContent = m.place;
   vCaption.textContent = m.caption;
+  setNote();
+  vCard.classList.remove('flipped');
+  vHint.textContent = 'แตะรูปเพื่ออ่านข้อความด้านหลัง';
   vCard.getAnimations().forEach(a => a.cancel());
   viewer.classList.add('open');
   viewer.setAttribute('aria-hidden','false');
@@ -1324,13 +1368,14 @@ function closeViewer(){
     viewerOpen = false;
     viewer.classList.remove('open');
     viewer.setAttribute('aria-hidden','true');
+    vCard.classList.remove('flipped');
     vCard.style.width = '';
     vCard.style.height = '';
   };
   if (reduceMotion){ finish(); return; }
   const thumbEl = document.querySelector(`.photo[data-photo="${activeIndex}"]`);
   const cr = vCard.getBoundingClientRect();
-  if (thumbEl && cr.width){
+  if (thumbEl && !vCard.classList.contains('flipped') && cr.width){
     const tr = thumbEl.getBoundingClientRect();
     const s = Math.min(1.4, tr.width / cr.width);
     const dx = (tr.left + tr.width / 2) - (cr.left + cr.width / 2);
@@ -1347,6 +1392,27 @@ function closeViewer(){
 vClose.addEventListener('click', e => { e.stopPropagation(); closeViewer(); });
 vReturn.addEventListener('click', e => { e.stopPropagation(); closeViewer(); });
 vBackdrop.addEventListener('click', closeViewer);
+
+function toggleFlip(){
+  vCard.classList.toggle('flipped');
+  const isBack = vCard.classList.contains('flipped');
+  vHint.textContent = isBack ? 'แตะอีกครั้งเพื่อกลับไปดูรูป' : 'แตะรูปเพื่ออ่านข้อความด้านหลัง';
+  softTick(isBack ? 520 : 620);
+  buzz(6);
+}
+let vx = 0, vy = 0, vt = 0;
+vCard.addEventListener('pointerdown', e => {
+  if (e.pointerType === 'mouse' && e.button !== 0) return;
+  vx = e.clientX; vy = e.clientY; vt = performance.now();
+});
+vCard.addEventListener('pointerup', e => {
+  const dx = e.clientX - vx, dy = e.clientY - vy;
+  const quick = Math.abs(dx) < 10 && Math.abs(dy) < 10 && performance.now() - vt < 700;
+  if ((Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy) * 1.3) || quick) toggleFlip();
+});
+vCard.addEventListener('keydown', e => {
+  if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); toggleFlip(); }
+});
 
 /* ---------- สุ่มความทรงจำ ---------- */
 function openRandom(){
