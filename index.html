@@ -533,11 +533,24 @@ body{font-family:'IBM Plex Sans Thai',sans-serif;font-weight:300;-webkit-font-sm
   .s11{--key-gap:24px}
   .mb-actions{padding-top:6px}
 }
-@media (max-height:660px){
-  .box-slot{width:246px;height:244.36px}
-  .box-wrap{transform:scale(.82)}
-  .s11{--key-gap:20px}
-  .mb-actions{padding-top:6px}
+@media (max-height:680px){
+  .s11{padding-top:calc(env(safe-area-inset-top) + 20px);
+    padding-bottom:calc(env(safe-area-inset-bottom) + 70px);--key-gap:20px}
+  .box-slot{width:234px;height:232.44px}
+  .box-wrap{transform:scale(.78)}
+  .mb-actions{padding-top:4px}
+  .mb-prompt{margin-bottom:6px}
+  .mb-status{margin-top:4px}
+}
+@media (max-height:620px){
+  .box-slot{width:210px;height:208.6px}
+  .box-wrap{transform:scale(.70)}
+  .s11{--key-gap:18px}
+}
+@media (max-height:580px){
+  .box-slot{width:186px;height:184.76px}
+  .box-wrap{transform:scale(.62)}
+  .s11{--key-gap:16px}
 }
 @media (prefers-reduced-motion:reduce){
   .lid,.photo,.v-card,.viewer,.sheet,.v-btn,.key,.key-svg,.box-light{transition-duration:1ms!important}
