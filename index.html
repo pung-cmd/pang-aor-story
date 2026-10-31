@@ -16,7 +16,7 @@
 <meta name="twitter:description" content="&#8203;">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500&family=Noto+Serif+Thai:wght@300;400;500&family=Mali:wght@400;500&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500&family=Noto+Serif+Thai:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet">
 <style>
 :root{
   --ink:#121110; --taupe:#5e554e; --taupe2:#958a7f;
@@ -455,10 +455,8 @@ body{font-family:'IBM Plex Sans Thai',sans-serif;font-weight:300;-webkit-font-sm
   font:inherit;font-size:1.35rem;line-height:1;cursor:pointer;
   -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
 .v-stage{position:relative;flex:1 1 auto;min-height:0;display:flex;align-items:center;justify-content:center;
-  perspective:1500px;z-index:2}
-.v-card{position:relative;transform-style:preserve-3d;cursor:pointer;
-  transition:transform .85s cubic-bezier(.25,.8,.25,1);will-change:transform}
-.v-card.flipped{transform:rotateY(180deg)}
+  z-index:2}
+.v-card{position:relative;will-change:transform}
 .v-face{position:absolute;inset:0;border-radius:4px;overflow:hidden;
   -webkit-backface-visibility:hidden;backface-visibility:hidden;
   box-shadow:0 26px 55px rgba(0,0,0,.62),0 4px 12px rgba(0,0,0,.45)}
@@ -466,22 +464,6 @@ body{font-family:'IBM Plex Sans Thai',sans-serif;font-weight:300;-webkit-font-sm
 .v-front::after{content:'';position:absolute;inset:0;pointer-events:none;
   box-shadow:inset 0 0 0 5px rgba(255,255,255,.20),inset 0 0 0 6px rgba(90,70,45,.16)}
 .v-front img{display:block;width:100%;height:100%;object-fit:cover}
-.v-back{transform:rotateY(180deg);display:flex;flex-direction:column;justify-content:center;
-  padding:var(--note-pad,clamp(18px,6vw,30px));
-  background:
-    radial-gradient(120% 80% at 20% 10%,rgba(255,255,255,.45),transparent 60%),
-    linear-gradient(160deg,#f4ecdc,#e9dcc5 72%,#e0d1b7);
-  box-shadow:inset 0 0 40px rgba(120,92,58,.16),
-    inset 0 0 0 1px rgba(120,92,58,.22),0 26px 55px rgba(0,0,0,.62)}
-.v-back::before{content:'';position:absolute;inset:0;pointer-events:none;opacity:.5;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='3' seed='9'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23p)' opacity='0.28'/%3E%3C/svg%3E");
-  background-size:120px 120px;mix-blend-mode:multiply}
-.v-note{position:relative;font-family:'Mali',cursive;font-weight:400;color:#4a3826;
-  font-size:var(--note-fs,clamp(.98rem,4.2vw,1.16rem));line-height:2.0;white-space:pre-line;
-  transform:rotate(-.6deg)}
-.v-note .sign{display:block;text-align:right;margin-top:.7em;color:#6b533a;font-size:.92em}
-.v-doodle{position:absolute;right:14px;bottom:12px;width:26px;height:24px;opacity:.5}
-.v-doodle path{fill:none;stroke:#a4756c;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
 
 .v-info{position:relative;z-index:2;flex:0 0 auto;width:100%;max-width:430px;margin:0 auto;
   text-align:center;padding-top:14px}
@@ -490,7 +472,6 @@ body{font-family:'IBM Plex Sans Thai',sans-serif;font-weight:300;-webkit-font-sm
 .v-meta .dot{width:3px;height:3px;border-radius:50%;background:rgba(201,168,106,.6)}
 .v-caption{font-family:'Noto Serif Thai',serif;font-size:clamp(1.02rem,4.3vw,1.22rem);
   line-height:1.75;margin-top:7px;color:var(--cream)}
-.v-hint{font-size:.72rem;letter-spacing:.03em;color:var(--taupe2);margin-top:7px}
 .v-actions{display:flex;flex-direction:column;gap:8px;margin-top:13px}
 .v-btn{min-height:48px;padding:0 18px;border-radius:999px;cursor:pointer;
   border:1px solid rgba(239,230,214,.20);background:rgba(255,255,255,.035);
@@ -498,30 +479,7 @@ body{font-family:'IBM Plex Sans Thai',sans-serif;font-weight:300;-webkit-font-sm
   transition:background .25s,border-color .25s,transform .2s}
 .v-btn:hover{background:rgba(255,255,255,.07);border-color:rgba(239,230,214,.4)}
 .v-btn:active{transform:scale(.99)}
-.v-btn.primary{border-color:rgba(201,168,106,.5);color:#f2e4c7;
-  background:linear-gradient(180deg,rgba(201,168,106,.17),rgba(201,168,106,.06))}
-.v-btn.primary:hover{border-color:rgba(201,168,106,.75);background:linear-gradient(180deg,rgba(201,168,106,.24),rgba(201,168,106,.09))}
 
-/* ---------- แผ่นเขียนข้อความ ---------- */
-.sheet-wrap{position:fixed;inset:0;z-index:90;pointer-events:none}
-.sheet-wrap.open{pointer-events:auto}
-.sheet-bg{position:absolute;inset:0;background:rgba(5,4,3,.55);opacity:0;
-  transition:opacity .35s var(--ease)}
-.sheet-wrap.open .sheet-bg{opacity:1}
-.sheet{position:absolute;left:0;right:0;bottom:0;padding:20px 20px calc(env(safe-area-inset-bottom) + 20px);
-  border-radius:22px 22px 0 0;background:linear-gradient(180deg,#221c18,#171310);
-  box-shadow:0 -22px 60px rgba(0,0,0,.65),inset 0 1px 0 rgba(255,255,255,.07);
-  transform:translateY(105%);transition:transform .45s var(--ease)}
-.sheet-wrap.open .sheet{transform:none}
-.sheet h3{font-family:'Noto Serif Thai',serif;font-weight:400;font-size:1.02rem;margin-bottom:12px}
-.sheet textarea{width:100%;min-height:118px;padding:14px;border-radius:12px;resize:none;
-  border:1px solid rgba(239,230,214,.14);background:#241e19;color:var(--cream);
-  font-family:'Mali',cursive;font-size:1rem;line-height:1.85;outline:none}
-.sheet textarea:focus{border-color:rgba(201,168,106,.5)}
-.sheet .row{display:flex;gap:10px;margin-top:12px}
-.sheet .row button{flex:1;min-height:46px;border-radius:999px;cursor:pointer;font:inherit;font-size:.9rem}
-.sheet .cancel{border:1px solid rgba(239,230,214,.2);background:none;color:var(--taupe2)}
-.sheet .save{border:1px solid rgba(201,168,106,.5);background:rgba(201,168,106,.16);color:#f2e4c7}
 
 @media (max-width:359px){
   .box-slot{width:270px;height:268.2px}
@@ -553,7 +511,7 @@ body{font-family:'IBM Plex Sans Thai',sans-serif;font-weight:300;-webkit-font-sm
   .s11{--key-gap:16px}
 }
 @media (prefers-reduced-motion:reduce){
-  .lid,.photo,.v-card,.viewer,.sheet,.v-btn,.key,.key-svg,.box-light{transition-duration:1ms!important}
+  .lid,.photo,.v-card,.viewer,.v-btn,.key,.key-svg,.box-light{transition-duration:1ms!important}
   .latch-hint,.key-guide .trail,.key.attn{animation:none}
   .box.shake{animation:none}
   .box.armed .lock-glow{animation:none}
@@ -759,25 +717,22 @@ body{font-family:'IBM Plex Sans Thai',sans-serif;font-weight:300;-webkit-font-sm
           <div class="pile-mask">
             <div class="pile" id="pile">
               <button class="photo" type="button" data-photo="0" style="--x:0px;--y:-10px;--w:98px;--r:-8deg;--z:5" aria-label="เปิดความทรงจำที่ 1">
-                <img src="images/9189.jpg" alt="ปังกับอ้อ" draggable="false">
+                <img src="images/memory-01.jpg" alt="ถ่ายรูปหน้ากระจกด้วยกัน" draggable="false">
               </button>
               <button class="photo" type="button" data-photo="1" style="--x:86px;--y:0px;--w:96px;--r:6deg;--z:6" aria-label="เปิดความทรงจำที่ 2">
-                <img src="images/9190.jpg" alt="ปังกับอ้อ" draggable="false">
+                <img src="images/memory-02.jpg" alt="กินหมูกระทะด้วยกันครั้งแรก" draggable="false">
               </button>
               <button class="photo" type="button" data-photo="2" style="--x:160px;--y:-12px;--w:88px;--r:-3deg;--z:4" aria-label="เปิดความทรงจำที่ 3">
-                <img src="images/9191.jpg" alt="ปังกับอ้อ" draggable="false">
+                <img src="images/memory-03.jpg" alt="โทรด้วยกันนานที่สุด" draggable="false">
               </button>
               <button class="photo" type="button" data-photo="3" style="--x:12px;--y:82px;--w:112px;--r:5deg;--z:8" aria-label="เปิดความทรงจำที่ 4">
-                <img src="images/9192.jpg" alt="ปังกับอ้อ" draggable="false">
+                <img src="images/memory-04.jpg" alt="ถ่ายรูปด้วยกัน" draggable="false">
               </button>
               <button class="photo" type="button" data-photo="4" style="--x:94px;--y:72px;--w:100px;--r:-7deg;--z:7" aria-label="เปิดความทรงจำที่ 5">
-                <img src="images/9193.jpg" alt="ปังกับอ้อ" draggable="false">
+                <img src="images/memory-05.jpg" alt="อ้อถักเปียให้" draggable="false">
               </button>
               <button class="photo" type="button" data-photo="5" style="--x:182px;--y:90px;--w:92px;--r:3deg;--z:6" aria-label="เปิดความทรงจำที่ 6">
-                <img src="images/9194.jpg" alt="ปังกับอ้อ" draggable="false">
-              </button>
-              <button class="photo" type="button" data-photo="6" style="--x:202px;--y:8px;--w:78px;--r:9deg;--z:1" aria-label="เปิดความทรงจำที่ 7">
-                <img src="images/9195.jpg" alt="ปังกับอ้อ" draggable="false">
+                <img src="images/memory-06.jpg" alt="ไปส่งอ้อที่บ้าน" draggable="false">
               </button>
             </div>
           </div>
@@ -852,33 +807,15 @@ body{font-family:'IBM Plex Sans Thai',sans-serif;font-weight:300;-webkit-font-sm
   <div class="v-backdrop" id="vBackdrop"></div>
   <button class="v-close" id="vClose" type="button" aria-label="ปิด">×</button>
   <div class="v-stage">
-    <div class="v-card" id="vCard" role="button" tabindex="0" aria-label="พลิกดูข้อความด้านหลังรูป">
+    <div class="v-card" id="vCard">
       <div class="v-face v-front"><img id="vImg" alt="ภาพความทรงจำ" draggable="false"></div>
-      <div class="v-face v-back">
-        <div class="v-note" id="vNote"></div>
-        <svg class="v-doodle" viewBox="0 0 30 28" aria-hidden="true"><path d="M15 25C7 19 3 14 3 9.5 3 6 5.6 3.5 8.9 3.5c2.4 0 4.4 1.3 6.1 3.5 1.7-2.2 3.7-3.5 6.1-3.5 3.3 0 5.9 2.5 5.9 6C27 14 23 19 15 25z"/></svg>
-      </div>
     </div>
   </div>
   <div class="v-info">
     <div class="v-meta"><span id="vDate"></span><span class="dot"></span><span id="vPlace"></span></div>
     <p class="v-caption" id="vCaption"></p>
-    <p class="v-hint" id="vHint">ปัดหรือแตะรูปเพื่อพลิกดูข้อความด้านหลัง</p>
     <div class="v-actions">
-      <button class="v-btn primary" id="vEdit" type="button">เขียนข้อความถึงความทรงจำนี้</button>
       <button class="v-btn" id="vReturn" type="button">เก็บกลับเข้ากล่อง</button>
-    </div>
-  </div>
-</div>
-
-<div class="sheet-wrap" id="sheetWrap" aria-hidden="true">
-  <div class="sheet-bg" id="sheetBg"></div>
-  <div class="sheet">
-    <h3>เขียนข้อความถึงความทรงจำนี้</h3>
-    <textarea id="noteInput" maxlength="280" placeholder="เขียนอะไรบางอย่างถึงรูปนี้..."></textarea>
-    <div class="row">
-      <button class="cancel" id="noteCancel" type="button">ยกเลิก</button>
-      <button class="save" id="noteSave" type="button">เก็บข้อความ</button>
     </div>
   </div>
 </div>
@@ -951,7 +888,7 @@ document.querySelectorAll('[data-go]').forEach(b => b.addEventListener('click', 
 }));
 
 document.getElementById('app').addEventListener('click', e => {
-  if (busy || viewerOpen || sheetOpen || e.target.closest('button,.letter')) return;
+  if (busy || viewerOpen || e.target.closest('button,.letter')) return;
   const s = scenes[cur];
   if (performance.now() - shownAt < (+s.dataset.dur || 0)){
     s.classList.add('skip'); shownAt = 0; return;
@@ -962,7 +899,7 @@ document.getElementById('app').addEventListener('click', e => {
 let tx = 0, ty = 0;
 document.addEventListener('touchstart', e => { tx = e.touches[0].clientX; ty = e.touches[0].clientY; }, {passive:true});
 document.addEventListener('touchend', e => {
-  if (viewerOpen || sheetOpen) return;
+  if (viewerOpen) return;
   if (scenes[cur] && scenes[cur].classList.contains('s11')) return;
   const dx = e.changedTouches[0].clientX - tx, dy = e.changedTouches[0].clientY - ty;
   if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) go(dx < 0 ? 1 : -1);
@@ -979,42 +916,22 @@ const viewer = document.getElementById('viewer');
 const vBackdrop = document.getElementById('vBackdrop');
 const vCard = document.getElementById('vCard');
 const vImg = document.getElementById('vImg');
-const vNote = document.getElementById('vNote');
 const vDate = document.getElementById('vDate');
 const vPlace = document.getElementById('vPlace');
 const vCaption = document.getElementById('vCaption');
 const vClose = document.getElementById('vClose');
 const vReturn = document.getElementById('vReturn');
-const vEdit = document.getElementById('vEdit');
-const sheetWrap = document.getElementById('sheetWrap');
-const sheetBg = document.getElementById('sheetBg');
-const noteInput = document.getElementById('noteInput');
-const noteSave = document.getElementById('noteSave');
-const noteCancel = document.getElementById('noteCancel');
 
 const memories = [
-  {src:'images/9189.jpg', date:'5 กันยายน 2026', place:'วิทยาลัยเทคนิคสุรินทร์', caption:'วันแรกที่กล้าเข้าไปใกล้',
-   note:'ตอนนั้นปังยังไม่กล้ามองอ้อเลย\nได้แต่แอบยิ้มคนเดียว\nขอบคุณที่วันนั้นอ้อหันมานะ'},
-  {src:'images/9190.jpg', date:'17 ตุลาคม 2026', place:'ร้านตั้งเตา', caption:'กินหมูกระทะด้วยกันครั้งแรก',
-   note:'หมูกระทะครั้งแรกของเรา\nไฟร้อนแค่ไหน\nก็ไม่ร้อนเท่าใจปังตอนนั้น'},
-  {src:'images/9191.jpg', date:'20 กันยายน 2026', place:'หน้าตึกเรียน', caption:'แอบถ่ายตอนอ้อไม่รู้ตัว',
-   note:'ปังถ่ายตอนอ้อคุยกับเพื่อน\nอ้ออาจไม่รู้ว่าปังมองอยู่\nแต่ปังจำได้ทุกวินาทีเลย'},
-  {src:'images/9192.jpg', date:'27 กันยายน 2026', place:'ในรถ', caption:'เที่ยวกันครั้งแรก',
-   note:'นั่งข้างกันทั้งวัน\nไม่ต้องพูดอะไรก็มีความสุข\nอยากนั่งแบบนี้อีกนาน ๆ'},
-  {src:'images/9193.jpg', date:'3 ตุลาคม 2026', place:'ในโลกของเรา', caption:'สร้างบ้านหลังแรกด้วยกัน',
-   note:'ถึงจะเป็นบ้านในเกม\nแต่ปังรู้สึกว่าเป็นของเราจริง ๆ\nเพราะมีอ้ออยู่ตรงนั้นด้วยกัน'},
-  {src:'images/9194.jpg', date:'12 ตุลาคม 2026', place:'วันหยุดของเรา', caption:'เล่นเกมด้วยกันจนดึก',
-   note:'แพ้หรือชนะไม่สำคัญ\nแค่ได้ยินเสียงอ้อหัวเราะ\nวันนั้นก็ดีที่สุดแล้ว'},
-  {src:'images/9195.jpg', date:'24 ตุลาคม 2026', place:'โทรหากันทุกคืน', caption:'เกือบ 6 ชั่วโมงที่ไม่อยากวางสาย',
-   note:'นาฬิกาบอก 5:39:39\nแต่ปังยังไม่อยากวางเลย\nฝันดีนะครับอ้อ'}
+  {src:'images/memory-01.jpg', date:'27 ตุลาคม 2026', place:'วิทยาลัยเทคนิคสุรินทร์', caption:'ถ่ายรูปหน้ากระจกด้วยกัน'},
+  {src:'images/memory-02.jpg', date:'17 ตุลาคม 2026', place:'ร้านตั้งเตา', caption:'กินหมูกระทะด้วยกันครั้งแรก'},
+  {src:'images/memory-03.jpg', date:'14 ตุลาคม 2026', place:'Instagram', caption:'โทรด้วยกันนานที่สุด'},
+  {src:'images/memory-04.jpg', date:'22 ตุลาคม 2026', place:'STC Cafe', caption:'ถ่ายรูปด้วยกัน'},
+  {src:'images/memory-05.jpg', date:'27 ตุลาคม 2026', place:'STC Cafe', caption:'อ้อถักเปียให้'},
+  {src:'images/memory-06.jpg', date:'15 ตุลาคม 2026', place:'ไปส่งอ้อที่บ้าน', caption:'ไปส่งอ้อที่บ้าน อ้อถ่ายไว้ น่ารักค่ะ'}
 ];
 
-const NOTE_KEY = 'mb-notes-v1';
-let savedNotes = {};
-try{ savedNotes = JSON.parse(localStorage.getItem(NOTE_KEY) || '{}') || {}; }catch(e){ savedNotes = {}; }
-const notes = memories.map((m, i) => savedNotes[i] || m.note);
-
-let boxOpen = false, viewerOpen = false, sheetOpen = false, activeIndex = 0;
+let boxOpen = false, viewerOpen = false, activeIndex = 0;
 let drag = null;
 
 function buzz(p){ try{ navigator.vibrate && navigator.vibrate(p); }catch(e){} }
@@ -1302,7 +1219,7 @@ photoEls.forEach(el => {
   const idx = +el.dataset.photo;
   el.dataset.r0 = el.style.getPropertyValue('--r') || '0deg';
   el.addEventListener('pointerdown', e => {
-    if (!boxOpen || viewerOpen || sheetOpen || !boxEl.classList.contains('opened')) return;
+    if (!boxOpen || viewerOpen || !boxEl.classList.contains('opened')) return;
     if (e.pointerType === 'mouse' && e.button !== 0) return;
     e.preventDefault();
     try{ el.setPointerCapture(e.pointerId); }catch(err){}
@@ -1356,13 +1273,6 @@ photoEls.forEach(el => {
 });
 
 /* ---------- Viewer ---------- */
-function esc(s){ return String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
-function noteHTML(text){
-  return esc(text).replace(/\n/g,'<br>') + '<span class="sign">— ปัง</span>';
-}
-function setNote(){
-  vNote.innerHTML = noteHTML(notes[activeIndex]);
-}
 function sizeCard(thumbEl){
   const stage = document.querySelector('.v-stage');
   const sr = stage.getBoundingClientRect();
@@ -1377,8 +1287,6 @@ function sizeCard(thumbEl){
   if (h > maxH){ h = maxH; w = h * ar; }
   vCard.style.width = Math.max(120, w) + 'px';
   vCard.style.height = Math.max(120, h) + 'px';
-  vCard.style.setProperty('--note-fs', Math.max(13, Math.min(16.5, h / 40 + 8)).toFixed(1) + 'px');
-  vCard.style.setProperty('--note-pad', Math.max(16, Math.min(30, h * .06)).toFixed(0) + 'px');
 }
 function openViewer(i, thumbEl){
   if (viewerOpen) return;
@@ -1389,9 +1297,6 @@ function openViewer(i, thumbEl){
   vDate.textContent = m.date;
   vPlace.textContent = m.place;
   vCaption.textContent = m.caption;
-  setNote();
-  vCard.classList.remove('flipped');
-  vHint.textContent = 'ปัดหรือแตะรูปเพื่อพลิกดูข้อความด้านหลัง';
   vCard.getAnimations().forEach(a => a.cancel());
   viewer.classList.add('open');
   viewer.setAttribute('aria-hidden','false');
@@ -1420,14 +1325,13 @@ function closeViewer(){
     viewerOpen = false;
     viewer.classList.remove('open');
     viewer.setAttribute('aria-hidden','true');
-    vCard.classList.remove('flipped');
     vCard.style.width = '';
     vCard.style.height = '';
   };
   if (reduceMotion){ finish(); return; }
   const thumbEl = document.querySelector(`.photo[data-photo="${activeIndex}"]`);
   const cr = vCard.getBoundingClientRect();
-  if (thumbEl && !vCard.classList.contains('flipped') && cr.width){
+  if (thumbEl && cr.width){
     const tr = thumbEl.getBoundingClientRect();
     const s = Math.min(1.4, tr.width / cr.width);
     const dx = (tr.left + tr.width / 2) - (cr.left + cr.width / 2);
@@ -1444,27 +1348,6 @@ function closeViewer(){
 vClose.addEventListener('click', e => { e.stopPropagation(); closeViewer(); });
 vReturn.addEventListener('click', e => { e.stopPropagation(); closeViewer(); });
 vBackdrop.addEventListener('click', closeViewer);
-
-function toggleFlip(){
-  vCard.classList.toggle('flipped');
-  const isBack = vCard.classList.contains('flipped');
-  vHint.textContent = isBack ? 'แตะอีกครั้งเพื่อกลับไปดูรูป' : 'ปัดหรือแตะรูปเพื่อพลิกดูข้อความด้านหลัง';
-  softTick(isBack ? 520 : 620);
-  buzz(6);
-}
-let vx = 0, vy = 0, vt = 0;
-vCard.addEventListener('pointerdown', e => {
-  if (e.pointerType === 'mouse' && e.button !== 0) return;
-  vx = e.clientX; vy = e.clientY; vt = performance.now();
-});
-vCard.addEventListener('pointerup', e => {
-  const dx = e.clientX - vx, dy = e.clientY - vy;
-  const quick = Math.abs(dx) < 10 && Math.abs(dy) < 10 && performance.now() - vt < 700;
-  if ((Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy) * 1.3) || quick) toggleFlip();
-});
-vCard.addEventListener('keydown', e => {
-  if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); toggleFlip(); }
-});
 
 /* ---------- สุ่มความทรงจำ ---------- */
 function openRandom(){
@@ -1489,38 +1372,8 @@ randomBtn.addEventListener('click', e => {
   }
 });
 
-/* ---------- เขียนข้อความ ---------- */
-function openSheet(){
-  noteInput.value = notes[activeIndex];
-  sheetWrap.classList.add('open');
-  sheetWrap.setAttribute('aria-hidden','false');
-  sheetOpen = true;
-  setTimeout(() => noteInput.focus(), 250);
-}
-function closeSheet(){
-  sheetWrap.classList.remove('open');
-  sheetWrap.setAttribute('aria-hidden','true');
-  sheetOpen = false;
-}
-vEdit.addEventListener('click', e => { e.stopPropagation(); openSheet(); });
-noteCancel.addEventListener('click', closeSheet);
-sheetBg.addEventListener('click', closeSheet);
-noteSave.addEventListener('click', () => {
-  const t = noteInput.value.trim();
-  notes[activeIndex] = t || memories[activeIndex].note;
-  savedNotes[activeIndex] = notes[activeIndex];
-  try{ localStorage.setItem(NOTE_KEY, JSON.stringify(savedNotes)); }catch(e){}
-  setNote();
-  closeSheet();
-  if (!vCard.classList.contains('flipped')){
-    setTimeout(toggleFlip, 220);
-  }
-  softTick(720);
-});
-
 /* ---------- คีย์บอร์ด ---------- */
 document.addEventListener('keydown', e => {
-  if (sheetOpen){ if (e.key === 'Escape') closeSheet(); return; }
   if (viewerOpen){
     if (e.key === 'Escape') closeViewer();
     return;
