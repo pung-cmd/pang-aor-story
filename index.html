@@ -440,6 +440,20 @@ body{font-family:'IBM Plex Sans Thai',sans-serif;font-weight:300;-webkit-font-sm
 .mb-random svg{width:17px;height:17px;fill:none;stroke:var(--gold);stroke-width:1.4;
   stroke-linecap:round;stroke-linejoin:round;opacity:.9}
 .mb-status{min-height:1.2em;font-size:.7rem;letter-spacing:.08em;color:var(--taupe2);margin-top:8px}
+.music-btn{display:none;align-items:center;justify-content:center;gap:8px;margin:10px auto 0;
+  padding:8px 14px;border-radius:999px;cursor:pointer;
+  border:1px solid rgba(201,168,106,.28);background:rgba(24,20,17,.55);
+  color:var(--taupe2);font:inherit;font-size:.72rem;letter-spacing:.06em;
+  transition:color .25s,border-color .25s,background .25s}
+.music-btn.show{display:inline-flex}
+.music-btn.playing{color:var(--gold-hi);border-color:rgba(201,168,106,.5);background:rgba(201,168,106,.08)}
+.music-btn svg{width:14px;height:14px;fill:currentColor;flex:0 0 auto}
+.music-btn .music-pause{display:none}
+.music-btn.playing .music-play{display:none}
+.music-btn.playing .music-pause{display:block}
+.yt-audio{position:fixed;left:0;bottom:0;width:1px;height:1px;opacity:0;
+  pointer-events:none;z-index:-1;overflow:hidden;border:0}
+.yt-audio iframe{width:1px;height:1px;border:0;pointer-events:none}
 
 /* ---------- Viewer ---------- */
 .viewer{position:fixed;inset:0;z-index:80;display:flex;flex-direction:column;
@@ -814,10 +828,17 @@ body{font-family:'IBM Plex Sans Thai',sans-serif;font-weight:300;-webkit-font-sm
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5 14 9l5.5.3-4.3 3.4 1.5 5.3L12 15l-4.7 3 1.5-5.3L4.5 9.3 10 9z"/></svg>
         สุ่มความทรงจำ
       </button>
+      <button class="music-btn" id="musicBtn" type="button" aria-pressed="false" aria-label="เล่นเพลงประกอบ">
+        <svg class="music-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+        <svg class="music-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg>
+        <span id="musicTxt">ของขวัญ</span>
+      </button>
       <p class="mb-status" id="mbStatus"></p>
     </div>
   </section>
 </main>
+
+<div class="yt-audio" aria-hidden="true"><div id="ytAudio"></div></div>
 
 <div class="viewer" id="viewer" aria-hidden="true">
   <div class="v-backdrop" id="vBackdrop"></div>
@@ -1020,6 +1041,72 @@ function softTick(pitch){
   o.connect(g); g.connect(ac.destination); o.start(t); o.stop(t + .1);
 }
 
+/* ---------- เพลงประกอบ ---------- */
+const YT_VIDEO_ID = '5hFMjOIBTGg';
+const musicBtn = document.getElementById('musicBtn');
+const musicTxt = document.getElementById('musicTxt');
+let ytPlayer = null, ytReady = false, musicWanted = false, musicOn = false;
+
+function setMusicUI(on){
+  musicOn = on;
+  musicBtn.classList.toggle('playing', on);
+  musicBtn.setAttribute('aria-pressed', on ? 'true' : 'false');
+  musicBtn.setAttribute('aria-label', on ? 'หยุดเพลงประกอบ' : 'เล่นเพลงประกอบ');
+  musicTxt.textContent = on ? 'กำลังเล่น · ของขวัญ' : 'ของขวัญ';
+}
+function initYTPlayer(){
+  if (ytPlayer) return;
+  ytPlayer = new YT.Player('ytAudio', {
+    height: '1', width: '1', videoId: YT_VIDEO_ID,
+    playerVars: {
+      autoplay: 0, controls: 0, disablekb: 1, fs: 0,
+      loop: 1, playlist: YT_VIDEO_ID, playsinline: 1,
+      modestbranding: 1, rel: 0
+    },
+    events: {
+      onReady: () => {
+        ytReady = true;
+        try { ytPlayer.setVolume(65); } catch(e){}
+        if (musicWanted) playMusic();
+      },
+      onStateChange: e => {
+        if (e.data === YT.PlayerState.PLAYING) setMusicUI(true);
+        else if (e.data === YT.PlayerState.PAUSED || e.data === YT.PlayerState.ENDED) setMusicUI(false);
+      },
+      onError: () => {
+        musicBtn.classList.add('show');
+        musicTxt.textContent = 'เพลงโหลดไม่ได้';
+      }
+    }
+  });
+}
+function loadYouTubeAPI(){
+  if (window.YT && window.YT.Player){ initYTPlayer(); return; }
+  window.onYouTubeIframeAPIReady = initYTPlayer;
+  const s = document.createElement('script');
+  s.src = 'https://www.youtube.com/iframe_api';
+  document.head.appendChild(s);
+}
+function playMusic(){
+  musicWanted = true;
+  musicBtn.classList.add('show');
+  if (!ytPlayer || !ytReady) return;
+  try {
+    ytPlayer.setVolume(65);
+    ytPlayer.playVideo();
+  } catch(e){}
+}
+function toggleMusic(){
+  if (!ytPlayer || !ytReady){ playMusic(); return; }
+  if (musicOn) ytPlayer.pauseVideo();
+  else playMusic();
+}
+musicBtn.addEventListener('click', e => {
+  e.stopPropagation();
+  toggleMusic();
+});
+loadYouTubeAPI();
+
 /* ---------- กุญแจ / เปิดกล่อง ---------- */
 const keyZone = document.getElementById('keyZone');
 const keyEl = document.getElementById('key');
@@ -1124,6 +1211,7 @@ function snapKeyToLock(){
   keyEl.style.setProperty('--kr', '0deg');
   keyEl.style.setProperty('--ks', '1');
   latchClick(); buzz([8, 26, 12]);
+  playMusic();
   setTimeout(startUnlock, reduceMotion ? 0 : 150);
   setTimeout(() => {
     keyEl.classList.remove('snapping');
